@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BauerSoft - B2C Micro-Tool Candidates</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface-hover: #232736;
+            --border: #2d3148;
+            --text: #e4e4e7;
+            --text-muted: #9ca3af;
+            --accent: #a78bfa;
+            --accent-dim: #7c3aed;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --pink: #ec4899;
+            --blue: #3b82f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+        header { margin-bottom: 2rem; }
+        header h1 { font-size: 1.6rem; font-weight: 700; }
+        header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.4rem; }
+        .nav { margin-bottom: 2rem; }
+        .nav a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+        .nav a:hover { background: var(--accent); color: var(--bg); }
+
+        .model-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .model-box strong { color: var(--text); }
+
+        .tool {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: border-color 0.15s;
+        }
+        .tool:hover { border-color: var(--accent); }
+        .tool-header {
+            padding: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .tool-num {
+            background: var(--accent-dim);
+            color: white;
+            min-width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 700;
+            margin-top: 2px;
+        }
+        .tool-summary { flex: 1; }
+        .tool-name { font-weight: 600; font-size: 1.05rem; margin-bottom: 0.2rem; }
+        .tool-category { color: var(--pink); font-size: 0.8rem; margin-bottom: 0.3rem; }
+        .tool-oneliner { color: var(--text-muted); font-size: 0.88rem; }
+        .tool-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+        }
+        .tag.g { color: var(--green); border: 1px solid var(--green); }
+        .tag.a { color: var(--amber); border: 1px solid var(--amber); }
+        .tag.p { color: var(--pink); border: 1px solid var(--pink); }
+        .tag.b { color: var(--blue); border: 1px solid var(--blue); }
+
+        .tool-detail {
+            display: none;
+            padding: 0 1.25rem 1.25rem 3.5rem;
+            font-size: 0.87rem;
+        }
+        .tool.open .tool-detail { display: block; }
+
+        .io-flow {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+        }
+        .io-arrow { color: var(--accent); font-weight: 700; }
+        .io-box { padding: 0.3rem 0.6rem; border-radius: 5px; background: var(--surface); }
+        .io-box.input { border: 1px solid var(--amber); color: var(--amber); }
+        .io-box.output { border: 1px solid var(--green); color: var(--green); }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 600px) { .detail-grid { grid-template-columns: 1fr; } }
+        .detail-block h4 {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+        .detail-block p {
+            color: var(--text-muted);
+            font-size: 0.84rem;
+        }
+
+        .bottom-note {
+            margin-top: 2rem;
+            padding: 1.25rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>B2C Micro-Tool Candidates</h1>
+            <p>Consumer-facing AI tools. Higher volume, lower price, viral potential. Things people share with friends.</p>
+        </header>
+
+        <div class="nav">
+            <a href="index.html">← Back to B2B Tools</a>
+        </div>
+
+        <div class="model-box">
+            <strong>B2C model:</strong> Free tier with upgrade ($5-15/mo or $3-10 per use). Distribution via social/viral/SEO, not ads. The tool needs to produce something shareable or save enough time/money that word-of-mouth carries it. Build in days, not weeks. If it doesn't get organic traction in 2 weeks, move on.
+        </div>
+
+        <div id="tools"></div>
+
+        <div class="bottom-note">
+            <strong>B2C vs B2B tradeoff:</strong> B2C has higher volume potential and viral upside, but lower revenue per user and less predictable retention. The best B2C micro-tools either (1) save people real money (bill negotiation, subscription audit), (2) save hours of tedious work (trip planning, event prep), or (3) produce something shareable that markets itself (highlight reels, styled photos). Ideally all three.<br><br>
+            <strong>Pricing philosophy:</strong> Freemium or pay-per-use beats monthly subscription for most consumer tools. People will pay $5 once for something they need right now more readily than $10/mo for something they might need later.
+        </div>
+    </div>
+
+    <script>
+const tools = [
+    {
+        num: 1,
+        name: "ShowPrep",
+        category: "Concerts & Live Events",
+        oneliner: "Going to a concert? Paste the artist name + venue. Get a predicted setlist, deep cut study guide, venue tips, and a playlist to learn every song they'll probably play.",
+        tags: [["Viral potential", "p"], ["Free + $3/report", "g"], ["Build: 4 days", "g"], ["SEO goldmine", "b"]],
+        input: "Artist name + venue + date",
+        output: "Predicted setlist + song study guide + venue tips + Spotify playlist link",
+        problem: "You're going to see an artist you casually like. You know the hits but not the deep cuts. You don't want to be the person standing silently during half the set. Currently you'd have to: check setlist.fm for recent shows, manually look up songs you don't know, read venue reviews for tips (parking, sound quality, best spots), and make a playlist. That's an hour of research most people skip.",
+        howItWorks: "AI pulls recent setlist data (setlist.fm API or scraping), identifies the most likely songs for this specific tour leg. Generates a 'study guide' for each deep cut (what it's about, memorable moments). Adds venue-specific tips (GA pit tips, sound sweet spots, parking, nearby food). Creates a Spotify/Apple Music playlist in setlist order so you can listen in advance.",
+        distribution: "SEO for '[artist] setlist 2026 predictions.' Social sharing (people post their concert prep). TikTok/Instagram concert community. Partner with fan accounts. Every upcoming tour date is a new SEO page.",
+        monetization: "Free basic setlist prediction. $3 per full prep report (deep cut guide + venue tips + playlist). Or $9/mo unlimited for frequent concertgoers. Affiliate revenue on ticket links.",
+        risk: "Setlist.fm data is comprehensive but scraping may have legal gray areas. Predictions aren't guaranteed. But 'probably accurate' is still more useful than going in blind."
+    },
+    {
+        num: 2,
+        name: "SplitCheck",
+        category: "Money & Social",
+        oneliner: "Take a photo of a restaurant receipt. AI reads every item, assigns them to people at the table, calculates tax + tip per person. No more 'just Venmo me.'",
+        tags: [["Viral (shared at every dinner)", "p"], ["Free + premium", "g"], ["Build: 3 days", "g"], ["High frequency", "b"]],
+        input: "Photo of receipt + names of people at table",
+        output: "Per-person breakdown with tax + tip + Venmo/CashApp request links",
+        problem: "Splitting a check fairly is a weekly annoyance for anyone who eats with friends. The options suck: split evenly (unfair if you just had a salad), do mental math at the table (awkward and slow), or one person pays and does the math later (they always forget). Every group chat has had the 'who owes what' argument.",
+        howItWorks: "Snap a photo of the receipt. AI OCR reads every line item. You tap to assign items to people (or AI suggests based on 'the steak is probably not the vegetarian'). Automatically splits shared items (appetizers, pitchers). Adds proportional tax + chosen tip percentage. Generates Venmo/CashApp request links per person.",
+        distribution: "Pure word-of-mouth. Every time it's used, 3-6 people see it. TikTok 'hack' potential ('never argue about the check again'). App Store SEO for 'split bill' and 'receipt splitter.'",
+        monetization: "Free for basic splitting. $2.99/mo for: saved groups, receipt history, automatic Venmo requests, expense categorization. Or ad-supported free tier.",
+        risk: "Splitwise exists but is clunky and not photo-first. Tab exists but is bare bones. The receipt OCR quality is the differentiator. Competition is real but existing apps are all mediocre."
+    },
+    {
+        num: 3,
+        name: "TripDraft",
+        category: "Travel",
+        oneliner: "Tell it where you're going, how long, your vibe, and your budget. Get back a complete day-by-day itinerary with reservations, walking routes, and backup plans for rain.",
+        tags: [["Massive TAM", "p"], ["Free + $5/trip", "g"], ["Build: 1 week", "a"], ["SEO monster", "b"]],
+        input: "Destination + dates + travel style + budget + interests",
+        output: "Day-by-day itinerary + map links + restaurant reservations + rain backup plans",
+        problem: "Planning a trip takes 5-20 hours: researching neighborhoods, reading blog posts, checking restaurant availability, mapping walking routes, building a day-by-day schedule that actually makes geographic sense (not zigzagging across the city). Most people either over-plan (spreadsheet hell) or under-plan (waste days figuring it out on the ground).",
+        howItWorks: "You describe: destination, dates, travel style (foodie? museum? nightlife? outdoors?), budget, mobility constraints, and party composition. AI generates a complete itinerary that's geographically logical (morning activities near each other, not cross-city), includes specific restaurant/bar recommendations with reservation links, has time buffers, and includes weather-contingent alternatives.",
+        distribution: "SEO for '[city] itinerary [X] days' (thousands of high-intent searches). Travel TikTok/Instagram (people share itineraries). Pinterest. Travel subreddits. Blog partnerships.",
+        monetization: "Free basic itinerary (3 days, limited detail). $5 per full trip plan (unlimited days, restaurant links, map integration, PDF export). $15/mo for frequent travelers.",
+        risk: "Wanderlog, Tripnotes, and dozens of AI trip planners exist. VERY crowded. Differentiation needs to be in quality and specificity (actually bookable restaurants, not 'check out the local food scene'). Hard to win on SEO against established travel blogs. Still worth trying because the market is enormous."
+    },
+    {
+        num: 4,
+        name: "BillScript",
+        category: "Money & Savings",
+        oneliner: "Tell it which bill you want to negotiate (cable, phone, insurance, rent). Get a word-for-word script with negotiation tactics, retention department numbers, and exactly what to say when they push back.",
+        tags: [["Saves real money", "g"], ["$3 per script", "g"], ["Build: 3 days", "g"], ["High share rate", "p"]],
+        input: "Bill type + current provider + current amount + how long you've been a customer",
+        output: "Full negotiation script + department to call + best time to call + fallback tactics + expected savings",
+        problem: "Everyone knows you can call and negotiate your cable/phone/insurance bill, but most people don't because they don't know what to say. The hold times feel wasted if you don't have a game plan. Services like Trim/Billshark take 40% of savings (and have access to your accounts). People want to do it themselves, they just need the words.",
+        howItWorks: "Select your provider and bill type. Enter what you're currently paying. AI generates: the exact number to call (retention dept, not general), best days/times to call, opening script, responses to common pushback ('I can offer you $5 off'), escalation phrases, competitor offers to reference, and a 'nuclear option' script for threatening to cancel. Includes expected savings range based on data points from others.",
+        distribution: "SEO for 'how to negotiate [provider] bill' and 'lower my [provider] bill.' Reddit personal finance community. TikTok money-saving content. Affiliate potential with alternative providers.",
+        monetization: "$3 per script (one-time). Bundle: $9 for scripts for all your bills. Could upsell annual 're-negotiation reminders' at $2/mo.",
+        risk: "Low barrier to replicate (ChatGPT can do a basic version). Differentiation is in specificity: real retention numbers, real competitor offers, real success rate data. Need to build a data layer of 'what's actually working right now for Comcast customers in your area.'"
+    },
+    {
+        num: 5,
+        name: "SubAudit",
+        category: "Money & Savings",
+        oneliner: "Forward your email receipts or connect your bank. AI finds every subscription you're paying for, shows total monthly bleed, and cancels the ones you forgot about.",
+        tags: [["Saves real money", "g"], ["Freemium", "g"], ["Build: 1 week", "a"], ["Sticky once connected", "b"]],
+        input: "Email access (Gmail OAuth) or bank connection (Plaid)",
+        output: "Full subscription list + monthly total + 'forgotten' flags + one-click cancel links",
+        problem: "The average American has 12 subscriptions and doesn't know the real total. Free trials convert silently. That $4.99/mo thing you signed up for 2 years ago is still charging. Collectively it's $200-500/mo in subscriptions, and 20-30% of that is stuff people forgot about or don't use. The mental overhead of auditing it all keeps people from doing it.",
+        howItWorks: "Connect Gmail (scans for subscription receipts/confirmations) or Plaid (scans bank transactions for recurring charges). AI identifies all subscriptions: name, amount, billing cycle, how long you've had it, last time you used it (if detectable). Flags 'probably forgotten' subscriptions. Shows total monthly/annual spend. Provides cancel links/instructions for each. Optional: reminds you before free trials convert.",
+        distribution: "SEO for 'find my subscriptions' and 'cancel unused subscriptions.' TikTok money-saving content. New Year's resolution season. Financial wellness communities.",
+        monetization: "Free audit (shows what you're paying). $4.99/mo for: monitoring, new subscription alerts, auto-cancel for trials before they convert, annual re-audit reminders. Or one-time $9.99 for full audit + cancel assistance.",
+        risk: "Rocket Money (formerly Truebill) is the big player here ($4-12/mo, 5M+ users). They raised $800M. But they negotiate on your behalf (taking a cut) which some people distrust. A self-service 'just show me what I'm paying' tool is simpler and more trusted. Also: Plaid costs money per connection."
+    },
+    {
+        num: 6,
+        name: "ConcertCut",
+        category: "Concerts & Live Events",
+        oneliner: "Upload all your shaky phone videos from a concert. AI picks the best moments, syncs them to the audio, and edits a shareable highlight reel.",
+        tags: [["Highly shareable", "p"], ["$3-5 per edit", "g"], ["Build: 1 week", "a"], ["Viral format", "p"]],
+        input: "Phone videos from a concert (5-30 clips)",
+        output: "60-90 second highlight reel, audio-synced, color-corrected, shareable",
+        problem: "Everyone records 20-30 phone clips at concerts. Nobody edits them. They sit in your camera roll forever. The ones you post to your story are shaky and have bad audio. You'd love a polished highlight reel but you're not going to learn video editing software for it.",
+        howItWorks: "Upload your concert clips (bulk upload, any length). AI identifies the best moments (crowd energy, stage visuals, clear audio sections). Syncs clips to the beat. Color-corrects for venue lighting. Stabilizes shaky footage. Trims dead air. Outputs a 60-90 second reel optimized for Instagram/TikTok aspect ratio with optional text overlays (artist name, venue, date).",
+        distribution: "Post-concert social sharing (every reel IS an ad for the tool). Instagram/TikTok concert community. Partnership with venues/promoters (offer free reels in exchange for branding). Festival season marketing pushes.",
+        monetization: "$3 per reel (basic edit). $5 for premium (longer, multiple format exports, no watermark). $12/mo unlimited for frequent concertgoers. Watermarked free tier acts as marketing.",
+        risk: "Video processing is computationally expensive (cloud GPU costs). Quality of phone concert audio is inherently limited. But 'good enough for Instagram' is a lower bar than 'broadcast quality.' GoPro/Apple already have basic auto-edit but don't target the concert use case specifically."
+    },
+    {
+        num: 7,
+        name: "DateDraft",
+        category: "Dating & Social",
+        oneliner: "Paste a dating profile you're interested in. AI suggests personalized openers, date ideas based on their interests, and conversation starters that reference their actual profile.",
+        tags: [["High demand", "p"], ["$5/mo or $1/message", "g"], ["Build: 3 days", "g"], ["Repeat usage", "b"]],
+        input: "Screenshot or text of someone's dating profile",
+        output: "3 personalized openers + date ideas matched to their interests + conversation starters",
+        problem: "The hardest part of dating apps is the first message. Generic 'hey' gets ignored. Good openers reference something specific in their profile, but crafting those for every match is mentally exhausting. People swipe right on 10 profiles and message 2 because they can't think of what to say to the other 8.",
+        howItWorks: "Paste their profile text or screenshot their profile. AI identifies their interests, humor style, and personality cues. Generates 3 opener options (witty, sincere, question-based) that reference specific details. Suggests 2-3 date ideas based on their stated interests. Provides conversation starters for if the opener works. Everything sounds like you, not a bot.",
+        distribution: "Dating advice TikTok/Reddit (massive audiences). SEO for 'best opening lines' and 'what to say on Hinge.' Word of mouth when people's response rates jump. Dating podcast sponsorships.",
+        monetization: "$5/mo for 20 profile analyses. $1 per individual analysis. Free tier: 2 per week (keeps people hooked). Premium: tone matching to YOUR voice, conversation continuation help.",
+        risk: "Ethical questions ('is this authentic?'). But it's no different from asking a friend 'what should I say?' Competition from ChatGPT directly (people already do this, but a purpose-built tool is faster and better). Needs to sound human, not AI-generated."
+    },
+    {
+        num: 8,
+        name: "PartyPlan",
+        category: "Events & Social",
+        oneliner: "Tell it what you're celebrating, how many people, your budget, and the vibe. Get back a complete party plan: food/drink quantities, playlist, timeline, shopping list with store links.",
+        tags: [["Seasonal spikes", "a"], ["$3-5/plan", "g"], ["Build: 4 days", "g"], ["Pinterest viral", "p"]],
+        input: "Occasion + guest count + budget + vibe/theme",
+        output: "Food/drink quantities + shopping list + playlist + decoration ideas + timeline + activity suggestions",
+        problem: "Planning a party (birthday, housewarming, Super Bowl, Halloween) means googling '25 person party food ideas', doing mental math on quantities, making 3 different shopping lists, finding a playlist, and still forgetting something. Takes 2-3 hours and you still buy too much beer and not enough ice.",
+        howItWorks: "Input: what's the occasion, how many people, budget, indoor/outdoor, vibe (casual/fancy/themed). AI generates: exact food quantities (with recipes or store-buy recommendations), drink calculator (cocktails, beer, wine, non-alcoholic ratios), shopping list organized by store section, decoration ideas with links, a themed playlist, a timeline for day-of prep, and activity/game suggestions if wanted.",
+        distribution: "Pinterest (party planning is HUGE there). SEO for 'birthday party ideas for 20 people' etc. Seasonal pushes (NYE, Super Bowl, Halloween, graduation). TikTok party planning.",
+        monetization: "$3 per party plan. Free basic plan (food quantities only), $5 for the full package with shopping links (affiliate potential), playlists, and printable checklist. Big seasonal upgrade pushes.",
+        risk: "Low barrier to replicate. But convenience and specificity win. If the shopping list links to actual products and the playlist is actually good (not just 'party hits'), the quality speaks for itself. Affiliate revenue from Amazon/Instacart links could be significant."
+    },
+    {
+        num: 9,
+        name: "ClosetMix",
+        category: "Fashion & Style",
+        oneliner: "Upload photos of your clothes. Tell it where you're going. AI puts together outfits from what you already own, plus suggests one piece that would unlock 5 new outfits.",
+        tags: [["High engagement", "p"], ["Freemium", "g"], ["Build: 1 week", "a"], ["Affiliate $$", "b"]],
+        input: "Photos of your wardrobe + occasion/weather/vibe",
+        output: "3-5 outfit combinations + styling tips + 'one piece to buy' recommendation with links",
+        problem: "'I have nothing to wear' when your closet is full. People buy new clothes because they can't see combinations in what they own. Outfit planning for events (weddings, interviews, dates) causes real stress. Personal stylists cost $200+/session.",
+        howItWorks: "Take photos of your clothes (or photograph your whole closet). Tag basics: category, color, formality. When you need an outfit, tell it: where you're going, the weather, the vibe. AI generates complete outfit combinations from your existing pieces, explains why they work, and identifies the single highest-impact piece you could buy that creates the most new outfit possibilities.",
+        distribution: "Instagram/TikTok fashion content (outfit try-ons using the tool). Pinterest style boards. Fashion subreddits. Influencer partnerships (they show their closet + AI outfits).",
+        monetization: "Free: 5 outfits/month from your closet. $8/mo premium: unlimited outfits, seasonal refresh suggestions, event-specific styling. Affiliate revenue from 'one piece to buy' recommendations (link to exact items on retailers).",
+        risk: "Photo recognition of clothing is imperfect (similar items, pattern detection). Subjective taste is hard. But 'good enough to inspire' is a lower bar than 'perfect stylist.' Lots of apps have tried this (Cladwell, Smart Closet) but all died because they required too much manual input. AI vision changes that equation."
+    },
+    {
+        num: 10,
+        name: "TicketSense",
+        category: "Concerts & Live Events",
+        oneliner: "Paste a ticket listing URL. AI tells you if the price is fair, predicts if it'll drop, and shows what similar seats sold for at past shows in that venue.",
+        tags: [["Saves real money", "g"], ["Free + premium", "g"], ["Build: 5 days", "g"], ["High intent SEO", "b"]],
+        input: "Ticket listing URL (StubHub, SeatGeek, etc.) or event + section",
+        output: "Fair price assessment + price prediction (drop/rise) + historical comps + best time to buy recommendation",
+        problem: "Concert/sports tickets on resale are opaque. Is $180 for Row 12 a good deal or a ripoff? Will prices drop closer to the show? Should you buy now or wait? People agonize over this and either overpay or miss out. There's no Consumer Reports for ticket pricing.",
+        howItWorks: "Paste a ticket URL or enter event + section. AI pulls pricing data: what that section typically sells for at that venue, how prices have moved over the last week, how far out the event is (prices usually drop in the last 48 hours for non-sellouts, spike for sellouts). Gives a clear verdict: 'This is 20% above average for this section. Based on current sell-through rate, prices will likely drop. Recommend waiting 3 days.'",
+        distribution: "SEO for '[event] tickets worth it' and 'should I buy tickets now or wait.' Reddit concert/sports communities. Twitter/X around big event on-sales. Integration potential with ticket platforms as an add-on.",
+        monetization: "Free: 3 price checks/month. $4.99/mo: unlimited checks + price drop alerts + historical data. Affiliate kickback if user buys through your recommended link.",
+        risk: "Ticket resale pricing data is hard to get (APIs are limited/expensive). Predictions are never certain. Legal gray area around scraping resale platforms. But even directional guidance ('this is above/below average') is valuable without perfect data."
+    },
+    {
+        num: 11,
+        name: "RoomGlow",
+        category: "Home & Lifestyle",
+        oneliner: "Take a photo of any room in your home. AI suggests specific furniture, decor, and layout changes with shoppable links and a 'preview' mockup.",
+        tags: [["Affiliate goldmine", "b"], ["Free + $5/room", "g"], ["Build: 1 week", "a"], ["Pinterest perfect", "p"]],
+        input: "Photo of a room + style preference + budget",
+        output: "Specific product suggestions with links + layout recommendations + AI mockup preview",
+        problem: "You know your living room could look better but you don't know what to change. Interior design consultations cost $150-500. Pinterest gives inspiration but not actionable 'buy this specific thing and put it there.' The gap between 'I want my room to look nice' and 'I know exactly what to buy' is where people get stuck and do nothing.",
+        howItWorks: "Photo your room. Choose a style direction (mid-century modern, cozy, minimalist, etc.) and budget range. AI identifies what's working and what's not (proportions, color balance, lighting). Suggests specific changes: 'Replace the floor lamp with something taller to balance the sofa height. Here are 3 options at your budget:' Generates a mockup showing how the room would look with changes. Links to actual purchasable items.",
+        distribution: "Pinterest (home decor is their #1 category). Instagram home styling accounts. TikTok room makeover content. SEO for 'how to style my living room' and 'room makeover ideas.' Before/after posts from users market themselves.",
+        monetization: "Free: 1 room analysis (low-detail). $5 per detailed room plan with product links. $15/mo unlimited rooms. Major affiliate revenue from furniture/decor links (5-15% commissions on $200+ items). Could make more from affiliates than subscriptions.",
+        risk: "AI mockups need to look convincing (uncanny valley risk). Product recommendations need to actually be available and at the right price. But even without the mockup, the 'specific products for your specific room' value prop is strong."
+    },
+    {
+        num: 12,
+        name: "GiftHit",
+        category: "Shopping & Occasions",
+        oneliner: "Describe the person (relationship, age, interests, budget, occasion). Get back 10 genuinely good gift ideas with buy links, not generic 'gift guide' filler.",
+        tags: [["Seasonal spikes (huge)", "p"], ["$2/list or affiliate", "g"], ["Build: 3 days", "g"], ["Gift guide SEO", "b"]],
+        input: "Recipient description + occasion + budget + past gifts (optional)",
+        output: "10 ranked gift suggestions with explanations + direct purchase links",
+        problem: "Gift shopping is stressful. You google 'gifts for dad who has everything' and get the same generic listicles (whiskey stones, novelty socks, generic subscription box). The recommendations don't account for YOUR specific person. You end up buying a gift card because you ran out of ideas and time.",
+        howItWorks: "Describe the person: relationship, age, their actual interests and hobbies (not just 'likes sports' but 'plays recreational basketball and just started grilling'), budget, occasion, things they already have or gifts you've already given. AI generates 10 genuinely specific suggestions ranked by confidence, with explanations of why each fits. Direct purchase links included. Can re-generate or narrow down ('more unique' or 'more practical').",
+        distribution: "SEO for every 'gift for [person type]' query (massive search volume). Seasonal pushes (Christmas starts in October). Birthday reminder integration. Social sharing ('look at this perfect gift idea I got'). Email list with occasion reminders.",
+        monetization: "Free: 3 ideas (no links). $2 per full list with links. Or fully free with affiliate revenue (Amazon Associates, etc.). Affiliate could be $1-5 per gift purchased through links. Christmas season alone could be significant.",
+        risk: "ChatGPT can do a basic version. But a purpose-built tool with product database, availability checking, price tracking, and wishlists is meaningfully better. The bar is 'better than googling for 20 minutes', not 'perfect.' Seasonal concentration means revenue is spiky."
+    },
+    {
+        num: 13,
+        name: "MoveMap",
+        category: "Life Decisions",
+        oneliner: "Thinking about moving to a new city? Input your priorities (cost, walkability, nightlife, weather, job market). Get a personalized city ranking with neighborhood recommendations.",
+        tags: [["High intent", "b"], ["$5-10/report", "g"], ["Build: 1 week", "a"], ["SEO potential", "b"]],
+        input: "Current city + priorities + budget + deal-breakers + remote/in-office",
+        output: "Top 5 cities ranked for YOU + neighborhood picks + cost comparison + quality of life score",
+        problem: "People considering relocation spend weeks/months researching cities: cost of living, neighborhoods, job markets, social scenes, weather. The information is scattered across 50 Reddit threads, Niche.com, BestPlaces.net, and random blog posts. You can't easily compare 'would my actual lifestyle cost more in Austin vs Denver vs Raleigh?'",
+        howItWorks: "Input your non-negotiables: budget (what you pay now vs what you'd accept), climate preferences, walkability needs, social scene priorities, job industry, proximity requirements (family, airport, nature). AI crunches data on cost of living, salary adjustments, neighborhood walkscores, demographic match, job market strength, and social indicators. Outputs: top 5 cities ranked for your specific profile, with 2-3 specific neighborhoods per city and an honest cost comparison.",
+        distribution: "SEO for 'best cities for [profession/lifestyle]' and 'should I move to [city].' Reddit relocation communities. Remote worker communities. Life transition moments (post-college, post-divorce, retirement).",
+        monetization: "$5 for quick ranking. $10 for detailed report with neighborhood recommendations, cost calculator, and 'first month' action plan. Could upsell: apartment hunting, realtor connections (referral fees).",
+        risk: "Lots of relocation tools exist but most are data dumps, not personalized recommendations. Differentiation is in the AI synthesis: not 'here are crime stats' but 'based on what you care about, here's where you'd actually be happiest.' Data accuracy and freshness matter."
+    },
+    {
+        num: 14,
+        name: "FridgeCook",
+        category: "Food & Daily Life",
+        oneliner: "Photo the contents of your fridge and pantry. AI generates a week of meals from what you already have, plus a tiny grocery list for what's missing.",
+        tags: [["Daily use potential", "b"], ["Freemium $6/mo", "g"], ["Build: 5 days", "g"], ["Reduces waste", "g"]],
+        input: "Photos of fridge/pantry contents",
+        output: "5-7 dinners using what you have + recipes + shopping list for gaps only",
+        problem: "The nightly 'what's for dinner' decision kills people. You have stuff in the fridge but can't think of what to make with it. You end up ordering DoorDash ($35) or buying duplicate groceries ($50) when you already have most of what you need. Meanwhile food rots in the back of the fridge. Americans waste $1,500/year in food.",
+        howItWorks: "Photo your fridge and pantry (takes 30 seconds). AI identifies ingredients you have. Generates a week of dinners that prioritize using what'll expire first. Recipes are practical (30-min meals, not chef fantasies). Accounts for dietary preferences. Shopping list is ONLY what you're missing for the week's meals (usually $20-30 worth instead of a full $100 grocery run).",
+        distribution: "TikTok 'what's in my fridge' content is already huge. Food waste angle for eco-conscious audience. Meal planning communities. SEO for 'what to make with [ingredient].' Instagram recipe content from real user results.",
+        monetization: "Free: 2 meals from your fridge. $6/mo: full week plans, dietary customization, family scaling, pantry memory (knows what you usually have). Grocery delivery affiliate links (Instacart, Amazon Fresh).",
+        risk: "Supercook and other 'recipe by ingredient' tools exist but aren't photo-based and don't do weekly meal planning with waste minimization. The photo-to-meal pipeline is the differentiator. Food identification from photos isn't perfect (condiment bottles, unlabeled containers) but 80% accuracy still helps."
+    }
+];
+
+const container = document.getElementById('tools');
+
+tools.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'tool';
+
+    const tagsHtml = t.tags.map(([text, cls]) => `<span class="tag ${cls}">${text}</span>`).join('');
+
+    el.innerHTML = `
+        <div class="tool-header">
+            <div class="tool-num">${t.num}</div>
+            <div class="tool-summary">
+                <div class="tool-name">${t.name}</div>
+                <div class="tool-category">${t.category}</div>
+                <div class="tool-oneliner">${t.oneliner}</div>
+                <div class="tool-tags">${tagsHtml}</div>
+            </div>
+        </div>
+        <div class="tool-detail">
+            <div class="io-flow">
+                <span class="io-box input">${t.input}</span>
+                <span class="io-arrow">→ AI →</span>
+                <span class="io-box output">${t.output}</span>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-block">
+                    <h4>The Problem</h4>
+                    <p>${t.problem}</p>
+                </div>
+                <div class="detail-block">
+                    <h4>How It Works</h4>
+                    <p>${t.howItWorks}</p>
+                </div>
+                <div class="detail-block">
+                    <h4>Distribution</h4>
+                    <p>${t.distribution}</p>
+                </div>
+                <div class="detail-block">
+                    <h4>Monetization</h4>
+                    <p>${t.monetization}</p>
+                </div>
+            </div>
+            <div class="detail-block" style="margin-top: 0.5rem;">
+                <h4>Key Risk</h4>
+                <p>${t.risk}</p>
+            </div>
+        </div>
+    `;
+
+    el.querySelector('.tool-header').addEventListener('click', () => {
+        const wasOpen = el.classList.contains('open');
+        document.querySelectorAll('.tool.open').forEach(x => x.classList.remove('open'));
+        if (!wasOpen) el.classList.add('open');
+    });
+
+    container.appendChild(el);
+});
+    </script>
+</body>
+</html>
