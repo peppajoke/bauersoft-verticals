@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BauerSoft - Viable Opportunity Analysis</title>
+    <title>BauerSoft - Micro-Tool Candidates</title>
     <style>
         :root {
             --bg: #0f1117;
@@ -16,7 +16,6 @@
             --green: #10b981;
             --amber: #f59e0b;
             --red: #ef4444;
-            --blue: #3b82f6;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -24,380 +23,415 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            min-height: 100vh;
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
-        header { margin-bottom: 2.5rem; }
-        header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
-        header p { color: var(--text-muted); font-size: 0.95rem; }
-        .constraints {
+        .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+        header { margin-bottom: 2rem; }
+        header h1 { font-size: 1.6rem; font-weight: 700; }
+        header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.4rem; }
+
+        .model-box {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 1.25rem;
-            margin-bottom: 2.5rem;
-        }
-        .constraints h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); margin-bottom: 0.5rem; }
-        .constraints ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .constraints li {
-            background: var(--bg);
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--accent);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .opportunity {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.25rem;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .opportunity:hover { border-color: var(--accent); }
-        .opportunity.expanded { border-color: var(--accent); }
-
-        .opp-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
-        .opp-num {
-            background: var(--accent);
-            color: white;
-            min-width: 26px; height: 26px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 700;
-        }
-        .opp-title { font-size: 1.15rem; font-weight: 600; }
-        .opp-hook { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
-
-        .opp-stats {
-            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;
-        }
-        .stat {
-            background: var(--bg);
-            padding: 0.35rem 0.65rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-        }
-        .stat-label { color: var(--text-muted); }
-        .stat-val { font-weight: 600; }
-        .stat-val.good { color: var(--green); }
-        .stat-val.ok { color: var(--amber); }
-        .stat-val.bad { color: var(--red); }
-
-        .opp-detail { display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-        .opportunity.expanded .opp-detail { display: block; }
-
-        .detail-section { margin-bottom: 1.25rem; }
-        .detail-section h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.4rem; }
-        .detail-section p { color: var(--text-muted); font-size: 0.88rem; }
-        .detail-section ul { list-style: none; }
-        .detail-section li { padding: 0.25rem 0; padding-left: 1rem; position: relative; color: var(--text-muted); font-size: 0.88rem; }
-        .detail-section li::before { content: "~"; position: absolute; left: 0; color: var(--accent); }
-
-        .verdict-box {
-            background: var(--bg);
-            border-left: 3px solid;
-            padding: 0.75rem 1rem;
-            border-radius: 0 8px 8px 0;
-            font-size: 0.88rem;
-        }
-        .verdict-box.go { border-color: var(--green); }
-        .verdict-box.maybe { border-color: var(--amber); }
-        .verdict-box.risky { border-color: var(--red); }
-        .verdict-box strong { display: block; margin-bottom: 0.25rem; }
-
-        .market-data {
-            background: var(--bg);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-            font-size: 0.82rem;
-        }
-        .market-data table { width: 100%; border-collapse: collapse; }
-        .market-data th { text-align: left; color: var(--text-muted); font-weight: 500; padding: 0.3rem 0.5rem; }
-        .market-data td { padding: 0.3rem 0.5rem; }
-
-        .bottom-note {
-            margin-top: 2.5rem;
-            padding: 1.25rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
             font-size: 0.85rem;
             color: var(--text-muted);
         }
-        .bottom-note h3 { color: var(--text); margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .model-box strong { color: var(--text); }
 
-        .expand-text { color: var(--accent); font-size: 0.72rem; float: right; margin-top: -1.5rem; }
+        .tool {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: border-color 0.15s;
+        }
+        .tool:hover { border-color: var(--accent); }
+        .tool-header {
+            padding: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .tool-num {
+            background: var(--accent);
+            color: white;
+            min-width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 700;
+            margin-top: 2px;
+        }
+        .tool-summary { flex: 1; }
+        .tool-name { font-weight: 600; font-size: 1.05rem; margin-bottom: 0.2rem; }
+        .tool-target { color: var(--green); font-size: 0.8rem; margin-bottom: 0.3rem; }
+        .tool-oneliner { color: var(--text-muted); font-size: 0.88rem; }
+        .tool-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: var(--bg);
+            color: var(--text-muted);
+        }
+        .tag.g { color: var(--green); border: 1px solid var(--green); background: transparent; }
+        .tag.a { color: var(--amber); border: 1px solid var(--amber); background: transparent; }
+
+        .tool-detail {
+            display: none;
+            padding: 0 1.25rem 1.25rem 3.5rem;
+            font-size: 0.87rem;
+        }
+        .tool.open .tool-detail { display: block; }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 600px) { .detail-grid { grid-template-columns: 1fr; } }
+        .detail-block h4 {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+        .detail-block p, .detail-block li {
+            color: var(--text-muted);
+            font-size: 0.84rem;
+        }
+        .detail-block ul { list-style: none; }
+        .detail-block li { padding: 0.15rem 0; padding-left: 0.8rem; position: relative; }
+        .detail-block li::before { content: "-"; position: absolute; left: 0; color: var(--accent); }
+
+        .io-flow {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+        }
+        .io-arrow { color: var(--accent); font-weight: 700; }
+        .io-box {
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            background: var(--surface);
+        }
+        .io-box.input { border: 1px solid var(--amber); color: var(--amber); }
+        .io-box.output { border: 1px solid var(--green); color: var(--green); }
+
+        .bottom-note {
+            margin-top: 2rem;
+            padding: 1.25rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>BauerSoft: What Can You Actually Ship</h1>
-            <p>5 opportunities filtered through real constraints. Not "big markets that exist" but "things you can build, sell, and collect revenue on in 90 days or less."</p>
+            <h1>Micro-Tool Candidates</h1>
+            <p>One industry. One annoying workflow. One simple web tool. Try many, kill fast.</p>
         </header>
 
-        <div class="constraints">
-            <h3>Hard Constraints Applied</h3>
-            <ul>
-                <li>Solo founder + day job</li>
-                <li>No sales team</li>
-                <li>No domain expertise required</li>
-                <li>JS/TS/Postgres stack</li>
-                <li>AI (Claude/GPT) is the product</li>
-                <li>Revenue in &lt;90 days</li>
-                <li>No regulatory compliance burden</li>
-                <li>$0 upfront capital</li>
-            </ul>
+        <div class="model-box">
+            <strong>The model:</strong> Simple web app. User uploads/inputs something specific to their trade. AI processes it. They get back the tedious thing they used to spend hours on. Charge $49-199/mo. Build each in 1-2 weeks. Run ads targeting the exact job title. If it doesn't convert in 30 days, kill it and try the next one.
         </div>
 
-        <div class="section-label">Key Insight: Don't Pick a Vertical. Pick a Workflow.</div>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">The dataset has 318 business types. 176 of them are owner-operator accessible with low compliance. The opportunity isn't "build software for dentists." It's "solve one painful workflow that 500k+ businesses share, and let AI be the moat."</p>
-
-        <div id="opportunities"></div>
+        <div id="tools"></div>
 
         <div class="bottom-note">
-            <h3>Methodology</h3>
-            <p>Source: 318 US business types scored across 40 dimensions (May 2026). Filtered for: owner-operator ratio >=4, decision-maker accessibility >=4, regulatory compliance <=3, sales cycle <=1 month, AI advantage >=3. Then grouped by shared workflow pain, not vertical. Revenue estimates are conservative.</p>
-            <p style="margin-top: 0.5rem;">Previous analysis (HVAC deep-dive, CrewOne platform concept) explored the trades vertical. This analysis asks a different question: what's the smallest thing you can ship that generates revenue fastest?</p>
+            <strong>Source data:</strong> 318 US business types, 40 dimensions. Filtered for owner-operator accessible, low compliance, high manual pain, market size >= 8,000 businesses. Then hand-picked for workflows where the input/output is clear and AI genuinely does it better than a human spending hours.<br><br>
+            <strong>Strategy:</strong> Ship 3-4 of these over 6-8 weeks. Run $500 in ads for each. The one that gets trial signups wins more investment. The rest get archived. Don't fall in love with any of them before the market says yes.
         </div>
     </div>
 
     <script>
-const opportunities = [
+const tools = [
     {
         num: 1,
-        title: "AI Phone Receptionist for Home Services",
-        hook: "Owner-operators miss 40% of inbound calls while working. An AI answers, qualifies the lead, books the job, texts the owner. Revenue from day one.",
-        stats: [
-            { label: "Addressable businesses", val: "800,000+", cls: "good" },
-            { label: "Price point", val: "$150-250/mo", cls: "good" },
-            { label: "Time to MVP", val: "3-4 weeks", cls: "good" },
-            { label: "Competition", val: "Emerging (Smith.ai, Ruby)", cls: "ok" },
-            { label: "Moat depth", val: "Medium (switching cost)", cls: "ok" }
-        ],
-        why: "The single most universal pain point in the dataset. 43% of accessible businesses cite scheduling as top pain, but the real issue is upstream: they miss the call entirely. A plumber under a sink, a cleaner mid-job, a painter on a ladder. Every missed call is $200-2000 in lost revenue. AI phone answering is now good enough (Twilio + GPT/Claude) to handle trade-specific intake: 'Is it a slab leak or a fixture?' 'How many rooms need painting?' The owner gets a text with a qualified lead and a tentative booking.",
-        howItWorks: [
-            "Twilio number forwards their business line when busy/after hours",
-            "AI answers with their business name, handles trade-specific intake questions",
-            "Qualifies urgency, service area, and job type",
-            "Books directly into their calendar or sends owner a text to confirm",
-            "Sends customer a confirmation text with business info",
-            "Owner reviews missed calls + leads in a simple dashboard or text summary"
-        ],
-        whyNow: [
-            "Voice AI quality crossed the usability threshold in 2025",
-            "Smith.ai charges $300-700/mo for HUMAN receptionists; AI can undercut 3x",
-            "Ruby Receptionist is $200+/mo and not trade-specific",
-            "No existing player does trade-specific qualification ('What's the PSI on your gauge?')",
-            "Twilio costs ~$0.02/min; margin is enormous at $200/mo"
-        ],
-        risks: "Voice AI still has edge cases (accents, background noise, complex scenarios). Customer trust in 'talking to a robot' varies. Twilio integration adds operational complexity. Competition is heating up (Bland.ai, Air.ai, etc.) but nobody owns home services specifically.",
-        revenue: "800k businesses. Even 0.1% penetration = 800 customers at $200/mo = $160k ARR. But the real math: one Facebook ad targeting 'plumber' or 'HVAC' in a metro area could land 5-10 trials/week. Self-serve signup, 14-day free trial, credit card on file.",
-        verdict: "go",
-        verdictText: "Strongest play. Clear pain, proven willingness to pay (Smith.ai exists at 3x the price), AI is genuinely the product not a feature, and you can launch in a single metro market to validate before scaling. The 'trade-specific' angle is your wedge against generic AI phone services."
+        name: "RoofSnap Estimate",
+        target: "Roofing contractors (25,000 US)",
+        oneliner: "Upload drone/ladder photos of a roof. Get back a formatted estimate with materials, labor, and a client-ready PDF proposal.",
+        tags: [["$250/mo budget", "g"], ["25k market", "a"], ["Build: 2 weeks", "g"]],
+        input: "Roof photos + sqft + pitch",
+        output: "Material list + labor hours + branded PDF proposal",
+        problem: "A roofer spends 2-3 hours per estimate: measuring, calculating shingle bundles and underlayment rolls, pricing materials, writing it up. They can only do 2-3 estimates per week, which directly caps their revenue pipeline. Most use paper or Excel.",
+        howAI: "Vision AI identifies roof complexity, dormers, valleys. Calculates area from known dimensions + photos. Pulls current material pricing. Generates line-item estimate with markup. Formats as a professional PDF with their branding.",
+        findBuyers: "Facebook ads targeting 'roofing contractor' or 'roofing business owner.' Google ads on 'roofing estimate template' and 'roofing proposal software.' Roofing Facebook groups (massive, very active).",
+        competition: "EagleView does satellite measurement ($30-50/report, slow). RoofHub exists but clunky. No AI-native player generating full proposals from photos.",
+        revenue: "$149/mo unlimited estimates. 200 customers = $358k ARR.",
+        risk: "Accuracy is critical. Bad estimate = lost money. Start with 'AI draft that you review and adjust' positioning, not 'perfect estimates automatically.'"
     },
     {
         num: 2,
-        title: "AI Bookkeeping Layer (Post-Bench)",
-        hook: "Bench shut down. 35,000 small businesses lost their bookkeeper overnight. AI can do 80% of what Bench did at 20% of the cost.",
-        stats: [
-            { label: "Immediate market", val: "35,000 (ex-Bench)", cls: "good" },
-            { label: "Total market", val: "5M+ small businesses", cls: "good" },
-            { label: "Price point", val: "$99-199/mo", cls: "good" },
-            { label: "Time to MVP", val: "4-6 weeks", cls: "ok" },
-            { label: "Competition", val: "Scrambling (Pilot, Decimal)", cls: "ok" }
-        ],
-        why: "Bench had 35,000 customers paying $250-500/mo for human bookkeepers to categorize transactions, reconcile accounts, and deliver monthly P&Ls. They shut down in Dec 2024 and those customers scattered. The dirty secret: 80% of bookkeeping is transaction categorization, which AI does better than humans already. Connect Plaid to their bank, AI categorizes everything, flags anomalies, generates monthly financials. The 20% that needs a human (year-end, complex journal entries) you outsource or don't offer.",
-        howItWorks: [
-            "Plaid connection to business bank accounts and credit cards",
-            "AI auto-categorizes transactions (learns their specific patterns)",
-            "Receipt matching via photo upload (text/email forwarding)",
-            "Monthly P&L, balance sheet, and cash flow generated automatically",
-            "Flags anomalies: duplicate charges, unusual expenses, tax-relevant items",
-            "Quarterly tax estimate calculations",
-            "Export-ready for their CPA at tax time"
-        ],
-        whyNow: [
-            "Bench shutdown created 35k businesses actively looking for a replacement RIGHT NOW",
-            "Pilot ($500+/mo) and Decimal ($300+/mo) are too expensive for small businesses",
-            "AI categorization accuracy is now 95%+ with business-specific training",
-            "Plaid makes bank integration trivial",
-            "Owner-operators hate bookkeeping more than anything; they'll pay to not think about it"
-        ],
-        risks: "Financial data requires security/trust (SOC2 eventually). Accuracy needs to be high; wrong categories = tax issues. Plaid costs add up. The 'last 20%' (complex transactions, reconciliation edge cases) could eat support time. Competition is aware of the Bench gap.",
-        revenue: "Target ex-Bench customers first (they're searching). $149/mo, 500 customers in year 1 = $894k ARR. But can start smaller: 50 customers at $149 = $89k ARR, still meaningful. Acquisition: 'Switch from Bench' landing page, SEO for 'Bench alternative', Reddit/Facebook ads in small business groups.",
-        verdict: "go",
-        verdictText: "Time-sensitive opportunity. The Bench shutdown was Dec 2024; the window is closing but not closed. Ex-Bench customers are price-anchored at $250-500/mo, so $149 for AI-powered feels like a steal. Risk is accuracy and trust, but you can start with a 'human reviews AI work' model and phase humans out as accuracy improves."
+        name: "BodyShop Claim Writer",
+        target: "Auto body shops (35,000 US)",
+        oneliner: "Upload damage photos. Get back a formatted insurance supplement narrative that gets claims approved faster.",
+        tags: [["$200/mo budget", "g"], ["35k market", "g"], ["Build: 1.5 weeks", "g"]],
+        input: "Damage photos + repair plan notes",
+        output: "Formatted supplement narrative + line-item justification",
+        problem: "Insurance supplements are the bane of every body shop. You need to write a narrative explaining WHY each repair operation is necessary, with photos referenced, to get the insurer to approve the full repair cost. Shops lose thousands per month on rejected or underpaid claims because their narratives suck. Each one takes 30-60 minutes to write properly.",
+        howAI: "AI analyzes damage photos to identify affected panels, structural concerns, and hidden damage indicators. Generates insurance-standard narrative referencing specific photos, citing repair procedures (I-CAR standards), and justifying each line item. Uses the language adjusters expect.",
+        findBuyers: "Body shop forums (extremely active niche). Facebook groups for collision repair. Google ads on 'insurance supplement template' and 'body shop claim denied.' Trade shows (SEMA, local).",
+        competition: "Virtually none for AI-generated narratives. Some template-based tools exist but aren't AI. This is a genuine gap.",
+        revenue: "$129/mo unlimited claims. 300 customers = $464k ARR.",
+        risk: "Need to learn insurance terminology. Could partner with one body shop initially to nail the format. Insurers change requirements by company."
     },
     {
         num: 3,
-        title: "AI Estimate/Proposal Generator",
-        hook: "207,000 contractors spend 3-5 hours per estimate. AI can generate material lists, labor hours, and professional proposals from photos + a brief description.",
-        stats: [
-            { label: "Addressable businesses", val: "207,000", cls: "good" },
-            { label: "Price point", val: "$99-199/mo", cls: "good" },
-            { label: "Time to MVP", val: "3-4 weeks", cls: "good" },
-            { label: "Competition", val: "Weak (no AI-native player)", cls: "good" },
-            { label: "Moat depth", val: "Growing (data from completed jobs)", cls: "ok" }
-        ],
-        why: "Estimating is the #1 time sink for contractors that directly impacts revenue. A roofer spends 3 hours measuring, calculating materials, and writing up a proposal for a $15k job. They can only do 2-3 estimates per week, which caps their pipeline. AI can: analyze photos for scope, pull material pricing from suppliers, calculate labor hours from historical data, and generate a branded PDF proposal. Even if accuracy is 85% and the contractor adjusts, you've saved 2.5 hours per estimate.",
-        howItWorks: [
-            "Contractor uploads photos of the job + brief voice/text description",
-            "AI identifies scope: roof area, paint surfaces, fence linear feet, etc.",
-            "Pulls current material pricing (lumber, shingles, paint, etc.)",
-            "Calculates labor hours based on job type and complexity",
-            "Generates branded PDF proposal with line items, total, and terms",
-            "Contractor reviews, adjusts any numbers, and sends to customer",
-            "Over time: learns from adjustments to improve future estimates"
-        ],
-        whyNow: [
-            "Vision AI (GPT-4o, Claude) can now extract meaningful measurements from photos",
-            "Material costs are volatile; real-time pricing is more valuable than ever",
-            "Existing estimating tools (PlanSwift, STACK) are desktop-based and expensive ($100-300/mo)",
-            "The trades labor shortage means speed-to-estimate = competitive advantage",
-            "Nobody has built mobile-first AI estimating for small contractors"
-        ],
-        risks: "Accuracy is critical. A bad estimate loses money or loses the job. Vision AI still struggles with complex measurements. Material pricing requires integrating with suppliers (or scraping). Trade-specific knowledge varies enormously (roofing vs electrical vs painting). May need to niche into one trade initially.",
-        revenue: "Start with ONE trade (painting or roofing, simplest to estimate from photos). 25k roofing companies, even 200 at $149/mo = $357k ARR. Expansion to painting, fencing, landscaping, concrete once the model works for one.",
-        verdict: "go",
-        verdictText: "High conviction if you niche hard. Don't try to estimate 'everything.' Pick roofing or painting where scope is most visible in photos and material lists are relatively standard. The contractor doesn't need it to be perfect; they need it to be 85% done so they can adjust and send in 20 minutes instead of 3 hours. Ship fast, iterate on accuracy with real user feedback."
+        name: "InspectDraft",
+        target: "Home inspectors (15,000 US)",
+        oneliner: "Upload inspection photos + voice notes. Get back a complete formatted inspection report ready to send to the client.",
+        tags: [["$150/mo budget", "a"], ["15k market", "a"], ["Build: 2 weeks", "g"]],
+        input: "Photos per room/system + voice notes or checklist",
+        output: "Full formatted inspection report (PDF, branded)",
+        problem: "Home inspectors spend 2-3 hours at the property, then 2-4 MORE hours back at their desk writing up the report. The report is formulaic (describe condition, note defects, recommend action) but tedious because every house is different. It's the #1 complaint in the profession: 'I spend more time writing than inspecting.'",
+        howAI: "Inspector takes photos and records quick voice notes during inspection ('master bath, caulk failing around tub, recommend re-caulk within 6 months'). AI organizes by system/room, generates professional prose, identifies defects in photos, applies standard severity ratings, and outputs a branded PDF report.",
+        findBuyers: "InterNACHI forum (17,000 members, very active). ASHI community. Google ads on 'home inspection report software' and 'inspection report template.' Inspector Facebook groups.",
+        competition: "Spectora, HomeGauge, and InspectIT are the big three. All are report-writing tools but NOT AI-powered. They still require manual typing per item. AI generation is the clear next step none of them have shipped.",
+        revenue: "$99/mo unlimited reports. 500 customers = $594k ARR.",
+        risk: "Smaller market (15k). But extremely high conversion potential because the pain is so acute and the community is tight-knit (word of mouth is everything in this industry)."
     },
     {
         num: 4,
-        title: "Real Estate Listing AI (Adjacent to House of Photos)",
-        hook: "You're already in this world. 100,000 agents need listing descriptions, social posts, and marketing. AI generates it from photos you're already taking.",
-        stats: [
-            { label: "Addressable agents", val: "100,000+", cls: "good" },
-            { label: "Price point", val: "$49-149/mo", cls: "ok" },
-            { label: "Time to MVP", val: "2-3 weeks", cls: "good" },
-            { label: "Competition", val: "Moderate (generic AI tools)", cls: "ok" },
-            { label: "Moat depth", val: "Low (commodity risk)", cls: "bad" }
-        ],
-        why: "House of Photos already shoots properties. The photos go to agents who then spend 30-60 minutes writing MLS descriptions, social captions, and email campaigns for each listing. AI can generate all of that from the photos + basic property data (beds/baths/sqft/neighborhood). The edge: you're already in the workflow. Instead of just delivering photos, deliver photos + ready-to-paste listing copy + 5 social posts + email campaign. Upsell on what you already do.",
-        howItWorks: [
-            "After a photoshoot, AI analyzes the images for features (kitchen island, hardwood floors, natural light, etc.)",
-            "Generates MLS description (multiple length options), social captions, email subject lines",
-            "Matches tone to agent's brand (learned from their past listings)",
-            "Delivers alongside photo gallery as a complete 'listing launch kit'",
-            "Agent copy-pastes into MLS, social, email. Done in 5 minutes instead of an hour.",
-            "Can also offer virtual staging, photo enhancement, and floor plan generation"
-        ],
-        whyNow: [
-            "House of Photos gives you an existing distribution channel and client relationships",
-            "Real estate agents are early AI adopters (they're already using ChatGPT for descriptions)",
-            "The problem with generic AI: it doesn't see the actual property. Photo-native descriptions are better.",
-            "MLS compliance rules (no 'best' or 'greatest') require specialized training",
-            "Bundle pricing with photography is natural"
-        ],
-        risks: "Low moat. Any AI tool can write listing descriptions. Differentiation relies on being photo-native and embedded in the photography workflow. If House of Photos doesn't scale, your distribution disappears. Agents are fickle and price-sensitive. Could easily become a feature of Canva or a photography competitor.",
-        revenue: "Two paths: (1) Upsell to House of Photos clients at $30-50/listing on top of photo package. (2) Standalone SaaS for agents at $79-149/mo for unlimited listings. Path 1 is faster money with zero acquisition cost. Path 2 is bigger but requires marketing.",
-        verdict: "maybe",
-        verdictText: "Lowest risk because you're already adjacent, but also lowest ceiling and weakest moat. Best as an upsell on House of Photos, not a standalone business. Could generate an extra $2-5k/mo quickly by adding it to existing photo packages, which funds development of something bigger. Good 'while you build' revenue, not the main play."
+        name: "MoverQuote",
+        target: "Moving companies (10,000 US)",
+        oneliner: "Customer uploads a video walkthrough of their home. AI inventories contents and generates an accurate move quote in minutes.",
+        tags: [["$150/mo budget", "a"], ["10k market", "a"], ["Build: 2 weeks", "g"]],
+        input: "Phone video walkthrough (2-3 min per room)",
+        output: "Itemized inventory + cubic feet + hour estimate + customer-facing quote",
+        problem: "Moving companies currently do in-home estimates (1-2 hours including drive time) or ask customers to fill out a 200-item inventory checklist (nobody does it accurately). Bad estimates = lost money on move day or lost customers to lower (inaccurate) quotes. A typical company sends an estimator to 5-8 homes per week, limiting their booking capacity.",
+        howAI: "Customer records a quick phone video walking through each room. AI identifies furniture, boxes, and items. Generates itemized inventory with cubic foot calculations. Estimates crew size and hours based on inventory + distance + floor/stairs. Outputs a professional quote the customer can accept online.",
+        findBuyers: "Moving company Facebook groups. Google ads on 'moving estimate software' and 'virtual moving survey.' Trade publications (Moving World magazine). Cold email to moving companies (easy to find).",
+        competition: "Yembo does AI-powered virtual surveys but sells to enterprise movers ($500+/mo). Nothing affordable exists for independent movers (3-10 trucks).",
+        revenue: "$149/mo unlimited quotes. 200 customers = $358k ARR.",
+        risk: "Video analysis accuracy. Furniture identification isn't perfect. Position as 'gets you 85% there so you can adjust' rather than 'perfectly accurate.'"
     },
     {
         num: 5,
-        title: "AI Review Reputation Engine",
-        hook: "2.8 million review-dependent businesses. Most never respond to reviews. AI responds instantly, requests reviews from happy customers, and monitors reputation 24/7.",
-        stats: [
-            { label: "Addressable businesses", val: "2,800,000", cls: "good" },
-            { label: "Price point", val: "$79-149/mo", cls: "ok" },
-            { label: "Time to MVP", val: "2-3 weeks", cls: "good" },
-            { label: "Competition", val: "Strong (Podium, Birdeye, NiceJob)", cls: "bad" },
-            { label: "Moat depth", val: "Low", cls: "bad" }
-        ],
-        why: "Biggest addressable market of any option here. Every local business lives and dies by Google reviews. A 4.2 vs 4.7 rating is the difference between getting the call or not. Most businesses never respond to reviews (especially negative ones, which then fester). AI can: respond to every review within minutes (personalized, on-brand), send post-service review requests via text, monitor Google/Yelp/Facebook for new reviews, alert on negatives, and generate weekly reputation reports.",
-        howItWorks: [
-            "Connect Google Business Profile (OAuth)",
-            "AI responds to all existing unresponded reviews (initial cleanup)",
-            "New reviews get AI responses within 5 minutes (owner approves or auto-sends)",
-            "After each completed job, customer gets a text requesting a review",
-            "Weekly email: new reviews, rating trend, response summary",
-            "Negative review escalation: owner gets an immediate alert + suggested response"
-        ],
-        whyNow: [
-            "Google's algorithm increasingly weights response rate and recency",
-            "Podium is $300-500/mo (overkill for small businesses)",
-            "AI personalization makes responses feel human, not template-based",
-            "Post-service review requests via text have 3-5x response rate vs email",
-            "Can be fully automated with no ongoing work from the business owner"
-        ],
-        risks: "Crowded market. Podium, Birdeye, NiceJob, GatherUp all do this. Differentiation is hard. Price pressure will be intense. Low moat means you're competing on price and UX, not on unique capability. Could work as a feature inside a larger product but questionable as a standalone business.",
-        revenue: "The math works at scale: 2.8M businesses, even $79/mo, even 0.01% = $2.2M ARR. But customer acquisition cost in a crowded market could eat margins. Best as: (1) a feature bundled into another product, or (2) hyper-niched to one vertical where you understand the review language perfectly.",
-        verdict: "risky",
-        verdictText: "Biggest market, easiest to build, but the competition is real and funded. Only viable if you niche hard (e.g., 'review management for contractors' with trade-specific response templates and post-job automation) or if you bundle it as a feature in one of the other plays. Don't build this standalone."
+        name: "CaterCalc",
+        target: "Catering companies (12,000 US)",
+        oneliner: "Input event details (guest count, dietary needs, style). Get back a complete menu proposal with quantities, cost breakdown, and client-facing quote.",
+        tags: [["$250/mo budget", "g"], ["12k market", "a"], ["Build: 1.5 weeks", "g"]],
+        input: "Guest count + event type + dietary needs + budget range",
+        output: "Menu proposal + ingredient quantities + cost breakdown + client PDF",
+        problem: "A caterer gets 10-20 inquiry emails per week. Each one needs a custom proposal: menu options, per-head pricing, ingredient costing, dietary accommodation notes, and a professional PDF. Each proposal takes 1-2 hours. Half don't convert. That's 10-20 hours/week on proposals for a 50% close rate.",
+        howAI: "AI generates menu options based on event type, season, and budget. Calculates quantities per item (accounting for dietary splits). Costs ingredients at current wholesale prices. Generates a beautiful client-facing proposal PDF with menu descriptions, pricing tiers, and terms.",
+        findBuyers: "Catering Facebook groups. Google ads on 'catering proposal template' and 'catering software.' Wedding vendor forums (caterers are huge in that space).",
+        competition: "Better Cater, CaterZen exist but focus on operations/logistics, not the proposal/quoting workflow. No AI-native proposal tool.",
+        revenue: "$149/mo unlimited proposals. 200 customers = $358k ARR.",
+        risk: "Menu creativity is subjective. Position as 'starting point you customize' not 'AI replaces your chef.' Food costing data needs to be accurate (could use USDA pricing or let them set their own)."
+    },
+    {
+        num: 6,
+        name: "PaintBid",
+        target: "Painting companies (30,000 US)",
+        oneliner: "Upload photos of rooms/exterior. Get back sqft calculations, paint quantity, labor hours, and a customer-ready bid.",
+        tags: [["$150/mo budget", "a"], ["30k market", "g"], ["Build: 2 weeks", "g"]],
+        input: "Room/exterior photos + condition notes",
+        output: "Sqft estimate + paint/primer quantities + labor hours + formatted bid",
+        problem: "Painting is the easiest trade to estimate 'by feel' but the hardest to estimate profitably. Painters routinely underbid because they eyeball square footage wrong, forget prep time for bad surfaces, or don't account for high ceilings/trim complexity. A proper estimate means measuring every wall, calculating coverage, estimating prep, and writing it up. 1-2 hours per job.",
+        howAI: "AI analyzes photos to estimate wall area (using door/window reference objects for scale). Identifies surface condition (peeling = more prep). Calculates paint and primer quantities by coverage rate. Estimates labor hours by complexity. Generates a professional bid with line items the customer can understand.",
+        findBuyers: "Painting contractor Facebook groups (huge). Google ads on 'painting estimate calculator' and 'painting bid template.' YouTube painting contractor community.",
+        competition: "PaintScout exists but it's a manual pricing tool, not AI-powered. No one does photo-to-estimate for painters.",
+        revenue: "$99/mo unlimited bids. 400 customers = $475k ARR.",
+        risk: "Photo-based sqft estimation has error margin. Painters are price-sensitive. But even a rough estimate that saves an hour per bid is worth $99/mo to someone doing 4 bids/week."
+    },
+    {
+        num: 7,
+        name: "GuestFlow",
+        target: "Vacation rental managers (10,000 US + growing fast)",
+        oneliner: "AI writes and sends all guest communication: check-in instructions, local recommendations, mid-stay check-ins, review requests. Personalized per property and guest.",
+        tags: [["$300/mo budget", "g"], ["10k+ market", "a"], ["Build: 1.5 weeks", "g"]],
+        input: "Property details + booking data (Airbnb/VRBO API or manual)",
+        output: "Automated guest messages: pre-arrival, check-in, mid-stay, check-out, review request",
+        problem: "A vacation rental manager with 10-50 properties sends 5-8 messages per guest per stay. That's potentially hundreds of messages per week, each needing to be personalized (property-specific check-in codes, local restaurant recs, weather-based activity suggestions). Most use canned templates that feel robotic and get bad reviews.",
+        howAI: "AI generates personalized messages based on: property specifics (access codes, quirks, parking), guest profile (family vs couple vs business), local events/weather, and stay timing. Sends automatically at the right moments. Adjusts tone based on the manager's communication style.",
+        findBuyers: "Airbnb host Facebook groups (massive). Bigger Pockets forums. Google ads on 'Airbnb automated messages' and 'vacation rental guest communication.' Short-term rental conferences.",
+        competition: "Hospitable, Guesty, TouchStay do template-based messaging. None use AI to actually personalize. The 'personalization' gap is where guests leave 5-star reviews vs 4-star.",
+        revenue: "$99/mo per 10 properties. Manager with 30 properties = $297/mo. 200 customers = $500k+ ARR.",
+        risk: "Airbnb API access can be restrictive. Integration complexity. But can start with 'copy-paste mode' where AI generates messages and manager sends them manually."
+    },
+    {
+        num: 8,
+        name: "DealCheck AI",
+        target: "Real estate investors / flippers (30,000 US)",
+        oneliner: "Paste a listing URL. Get back a full investment analysis: ARV, rehab estimate, cash-on-cash return, and a go/no-go recommendation with comps.",
+        tags: [["$260/mo budget", "g"], ["30k market", "g"], ["Build: 2 weeks", "g"]],
+        input: "Listing URL or address + investment strategy (flip/BRRRR/rental)",
+        output: "ARV analysis + rehab estimate + cash flow projection + comp report",
+        problem: "Real estate investors analyze 50-100 deals to find 1-2 worth pursuing. Each analysis takes 20-30 minutes: pull comps, estimate rehab, calculate ARV, run cash flow numbers. That's 20-50 hours of analysis per deal closed. Most use spreadsheets with manual comp research.",
+        howAI: "AI pulls property data from listing, finds comparable sales (Zillow/Redfin APIs or scraping), estimates rehab costs by property age/condition/photos, calculates ARV, runs cash flow models for multiple strategies (flip, rental, BRRRR), and outputs a one-page deal summary with a clear go/no-go signal.",
+        findBuyers: "Bigger Pockets (largest RE investor community). Real estate investor Facebook groups. Google ads on 'real estate deal analyzer' and 'investment property calculator.' YouTube investor community.",
+        competition: "DealCheck app exists ($10-20/mo) but is a manual calculator. No AI-powered analysis that does the research FOR you. REIPro is clunky. Huge opportunity for an AI-native tool.",
+        revenue: "$149/mo unlimited analyses. 500 customers = $894k ARR.",
+        risk: "Data accuracy (comp selection, rehab estimates) is critical. Bad analysis = bad investment. Position as 'screening tool' not 'investment advice.' Real estate data APIs can be expensive."
+    },
+    {
+        num: 9,
+        name: "WeddingScript",
+        target: "DJs / wedding entertainment (20,000 US) + event planners (10,000)",
+        oneliner: "Input event details and client preferences. Get back a complete timeline, MC script, vendor coordination schedule, and day-of run sheet.",
+        tags: [["$150-200/mo budget", "a"], ["30k market", "g"], ["Build: 1 week", "g"]],
+        input: "Event type + schedule + client preferences questionnaire",
+        output: "Minute-by-minute timeline + MC talking points + vendor cue sheet + emergency contingencies",
+        problem: "Wedding DJs and event planners spend 3-5 hours per event on planning: writing MC scripts, building timelines, coordinating with other vendors on cues, and creating day-of run sheets. It's the unglamorous backend that eats their weekday hours. Templates only get you 60% there because every wedding is different.",
+        howAI: "Client fills out a preference questionnaire (first dance song, special announcements, family dynamics, cultural elements). AI generates a complete timeline with MC scripts for each moment, vendor cue points ('photographer: get in position for cake cutting at 8:45'), and contingency plans for common issues (rain plan, late vendor, etc.).",
+        findBuyers: "DJ/entertainer Facebook groups. Wedding planner communities. WeddingWire/Knot vendor forums. Google ads on 'wedding DJ timeline template' and 'wedding day timeline maker.'",
+        competition: "Aisle Planner and Honeybook do project management but not AI-generated scripts/timelines. DJ Event Planner is old software. Nobody generates the CONTENT of the plan.",
+        revenue: "$79/mo unlimited events. 400 customers = $379k ARR.",
+        risk: "Seasonal (wedding season peaks). But DJs/planners plan year-round. Low WTP individually but high volume. Very easy to build (mostly text generation, no complex APIs)."
+    },
+    {
+        num: 10,
+        name: "ShopQuote",
+        target: "Machine shops / metal fabrication (30,000 US)",
+        oneliner: "Upload a drawing or CAD file. Get back a job quote with material cost, machine time, and pricing in minutes instead of hours.",
+        tags: [["$300/mo budget", "g"], ["30k market", "g"], ["Build: 3 weeks", "a"]],
+        input: "Technical drawing / CAD file / photo of part + material spec + quantity",
+        output: "Material cost + machine time estimate + setup time + total quote",
+        problem: "Machine shops spend 30-60 minutes quoting each job: reviewing drawings, calculating material usage, estimating machine time by operation (milling, turning, drilling), adding setup time, and pricing. They quote 10-20 jobs/week and win maybe 30%. That's 10-20 hours/week on quotes, mostly for work they won't get.",
+        howAI: "AI analyzes the drawing/CAD file to identify operations needed, material volume, and complexity. Estimates cycle time per operation based on material and tolerances. Calculates raw material cost at current pricing. Adds setup, finishing, and overhead. Generates a professional quote PDF.",
+        findBuyers: "Practical Machinist forum (huge community). Machine shop Facebook groups. Google ads on 'machine shop quoting software' and 'CNC job estimator.' Trade magazines.",
+        competition: "Paperless Parts does this but targets large shops ($500+/mo). ProShop is full MES software. Nothing affordable for the 5-20 person shop.",
+        revenue: "$199/mo unlimited quotes. 300 customers = $717k ARR.",
+        risk: "Technically hardest on this list. CAD file parsing is complex. Accuracy expectations are high (machinists are precise people). But the value prop is enormous: even 70% accuracy saves hours of quoting time on jobs you won't win anyway."
+    },
+    {
+        num: 11,
+        name: "FlipBook",
+        target: "Real estate photographers (15,000 US) + agents doing own photos",
+        oneliner: "Upload raw property photos. Get back edited, enhanced, and virtually staged images + a ready-to-post property website.",
+        tags: [["$100/mo budget", "a"], ["15k+ market", "a"], ["Build: 2 weeks", "g"]],
+        input: "Raw property photos (10-30 images)",
+        output: "Enhanced photos + virtual staging + single-property website + social posts",
+        problem: "Real estate photographers spend 30-60 minutes editing per property (color correction, sky replacement, vertical straightening, HDR blending). Then the agent needs to manually upload to MLS, create social posts, and maybe build a property page. It's a disjointed workflow where the photos sit in a delivery folder and nothing else happens automatically.",
+        howAI: "AI auto-edits photos (exposure, color, verticals, sky replacement). Offers one-click virtual staging for empty rooms. Generates a branded single-property website with photo gallery + description. Creates ready-to-post social media cards with listing details.",
+        findBuyers: "Real estate photography Facebook groups. Agent marketing groups. House of Photos network (you're already here). Google ads on 'real estate photo editing' and 'virtual staging.'",
+        competition: "BoxBrownie ($4-16/image for virtual staging), PhotoUp (outsourced editing). Both are per-image pricing. An unlimited monthly plan with AI speed is the angle.",
+        revenue: "$79/mo unlimited (or $129/mo with virtual staging). 400 customers = $500k ARR.",
+        risk: "Photo editing AI quality varies. Virtual staging needs to look good. Adjacent to your existing HoP work, so low risk to validate quickly."
+    },
+    {
+        num: 12,
+        name: "PoolChem",
+        target: "Pool service companies (20,000 US)",
+        oneliner: "Log water test readings. AI tells you exactly what chemicals to add, tracks history, and generates customer reports proving the pool is maintained.",
+        tags: [["$150/mo budget", "a"], ["20k market", "a"], ["Build: 1 week", "g"]],
+        input: "Water test strip readings (pH, chlorine, alkalinity, CYA, etc.)",
+        output: "Exact chemical dosing instructions + history graph + customer report PDF",
+        problem: "Pool techs test water at 15-25 pools per day. They need to calculate chemical additions based on current readings, pool volume, and desired ranges. Most do this by memory or a laminated cheat card. Wrong dosing = callback. They also can't prove to customers that the pool is being maintained properly (customers always think they're being overcharged).",
+        howAI: "Tech enters readings (or photographs test strip). AI calculates exact dosing for every chemical, accounting for interactions (e.g., adding acid affects chlorine efficacy). Tracks history per pool to spot trends (rising CYA, chronic low alkalinity). Generates monthly customer reports with graphs showing water quality over time.",
+        findBuyers: "Pool service Facebook groups. TroubleFreePool forum. Google ads on 'pool chemical calculator' and 'pool service software.' Pool supply distributors (partnership potential).",
+        competition: "Pool Brain exists but is full-service software. No simple 'just the chemistry' tool. Pool calc websites are free but don't track history or generate reports.",
+        revenue: "$79/mo unlimited pools. 300 customers = $284k ARR.",
+        risk: "Lower budget market. But the tool is dead simple to build (chemistry calculations are well-known formulas + a thin AI layer for recommendations). Could be MVP in 3-4 days."
+    },
+    {
+        num: 13,
+        name: "TreeBid",
+        target: "Tree service companies (15,000 US)",
+        oneliner: "Upload photos of trees to remove/trim. Get back a risk assessment, equipment needs, and a client-ready bid with pricing.",
+        tags: [["$150/mo budget", "a"], ["15k market", "a"], ["Build: 2 weeks", "g"]],
+        input: "Photos of tree(s) + property context + job type (removal/trim/stump)",
+        output: "Risk assessment + equipment list + crew time + formatted bid",
+        problem: "Tree work is one of the hardest things to estimate because every tree is different: species, size, lean, proximity to structures, access for equipment, and deadwood all factor in. An experienced arborist can eyeball it, but newer operators underbid constantly and lose money. Each estimate requires a site visit (30 min drive + 20 min inspection + 30 min writeup).",
+        howAI: "AI identifies tree species, estimates height/diameter from photos (using reference objects), assesses lean and proximity risks, recommends equipment (bucket truck? crane? climbing only?), estimates crew size and hours, and generates a bid with clear line items the customer understands.",
+        findBuyers: "ArboristSite forum. Tree care Facebook groups. Google ads on 'tree removal estimate' and 'tree service bidding.' Local arborist associations.",
+        competition: "Essentially nothing. ArborNote is basic CRM. No one does AI-assisted tree estimating.",
+        revenue: "$99/mo unlimited bids. 200 customers = $238k ARR.",
+        risk: "Accuracy of tree height/risk assessment from photos is uncertain. Liability concerns if someone relies on AI risk assessment and something goes wrong. Position carefully as 'bid assistance' not 'safety assessment.'"
+    },
+    {
+        num: 14,
+        name: "DetailPro Upsell Engine",
+        target: "Auto detailing businesses (20,000 US)",
+        oneliner: "Upload before photos of a vehicle. AI identifies every defect and generates a personalized upsell menu with before/after previews showing the customer what they're paying for.",
+        tags: [["$200/mo budget", "g"], ["20k market", "a"], ["Build: 1.5 weeks", "g"]],
+        input: "Photos of vehicle exterior/interior",
+        output: "Defect identification + tiered service menu + customer-facing visual quote",
+        problem: "Detailers leave money on the table because customers don't understand what services they need. 'Your car needs paint correction' means nothing to a customer. Detailers who succeed do walkarounds pointing at every scratch, swirl, and stain. But that takes 15 minutes per car and doesn't scale. Most just offer 'basic/premium/ultimate' packages without customization.",
+        howAI: "Customer drops off car. Detailer takes 10 photos (full exterior, interior close-ups). AI identifies: paint swirls, scratches, oxidation, water spots, interior stains, dashboard UV damage, headlight haze. Generates a visual report showing each defect circled, with a recommended service menu and pricing. Customer sees EXACTLY what they're paying for.",
+        findBuyers: "Auto detailing Facebook groups (extremely active, strong community). Google ads on 'auto detailing software' and 'detailing business tools.' YouTube detailing community (massive).",
+        competition: "Urable is basic scheduling. Nothing does AI defect detection and upsell generation. Complete whitespace.",
+        revenue: "$129/mo unlimited. ROI pitch: 'One extra $200 paint correction per week pays for a year of this tool.' 250 customers = $387k ARR.",
+        risk: "Lighting/angle variability in photos could affect defect detection quality. Start with 'helps you document and present' rather than 'AI finds everything.'"
     }
 ];
 
-const container = document.getElementById('opportunities');
+const container = document.getElementById('tools');
 
-opportunities.forEach(opp => {
+tools.forEach(t => {
     const el = document.createElement('div');
-    el.className = 'opportunity';
+    el.className = 'tool';
 
-    const statsHtml = opp.stats.map(s =>
-        `<div class="stat"><span class="stat-label">${s.label}: </span><span class="stat-val ${s.cls}">${s.val}</span></div>`
-    ).join('');
-
-    const howHtml = opp.howItWorks.map(h => `<li>${h}</li>`).join('');
-    const whyNowHtml = opp.whyNow.map(w => `<li>${w}</li>`).join('');
-
-    const verdictClass = opp.verdict;
-    const verdictLabel = opp.verdict === 'go' ? '🟢 Strong Play' : opp.verdict === 'maybe' ? '🟡 Conditional' : '🔴 Risky Standalone';
+    const tagsHtml = t.tags.map(([text, cls]) => `<span class="tag ${cls}">${text}</span>`).join('');
 
     el.innerHTML = `
-        <div class="opp-header">
-            <div class="opp-num">${opp.num}</div>
-            <div class="opp-title">${opp.title}</div>
+        <div class="tool-header">
+            <div class="tool-num">${t.num}</div>
+            <div class="tool-summary">
+                <div class="tool-name">${t.name}</div>
+                <div class="tool-target">${t.target}</div>
+                <div class="tool-oneliner">${t.oneliner}</div>
+                <div class="tool-tags">${tagsHtml}</div>
+            </div>
         </div>
-        <div class="opp-hook">${opp.hook}</div>
-        <div class="opp-stats">${statsHtml}</div>
-        <span class="expand-text">click to expand</span>
-        <div class="opp-detail">
-            <div class="detail-section">
-                <h4>The Thesis</h4>
-                <p>${opp.why}</p>
+        <div class="tool-detail">
+            <div class="io-flow">
+                <span class="io-box input">${t.input}</span>
+                <span class="io-arrow">→ AI →</span>
+                <span class="io-box output">${t.output}</span>
             </div>
-            <div class="detail-section">
-                <h4>How It Works</h4>
-                <ul>${howHtml}</ul>
+            <div class="detail-grid">
+                <div class="detail-block">
+                    <h4>The Problem</h4>
+                    <p>${t.problem}</p>
+                </div>
+                <div class="detail-block">
+                    <h4>How AI Solves It</h4>
+                    <p>${t.howAI}</p>
+                </div>
+                <div class="detail-block">
+                    <h4>Find Buyers</h4>
+                    <p>${t.findBuyers}</p>
+                </div>
+                <div class="detail-block">
+                    <h4>Competition</h4>
+                    <p>${t.competition}</p>
+                </div>
             </div>
-            <div class="detail-section">
-                <h4>Why Now</h4>
-                <ul>${whyNowHtml}</ul>
-            </div>
-            <div class="detail-section">
-                <h4>Risks</h4>
-                <p>${opp.risks}</p>
-            </div>
-            <div class="detail-section">
-                <h4>Revenue Math</h4>
-                <p>${opp.revenue}</p>
-            </div>
-            <div class="verdict-box ${verdictClass}">
-                <strong>${verdictLabel}</strong>
-                ${opp.verdictText}
+            <div class="detail-grid">
+                <div class="detail-block">
+                    <h4>Revenue Math</h4>
+                    <p>${t.revenue}</p>
+                </div>
+                <div class="detail-block">
+                    <h4>Key Risk</h4>
+                    <p>${t.risk}</p>
+                </div>
             </div>
         </div>
     `;
 
-    el.addEventListener('click', () => {
-        const wasExpanded = el.classList.contains('expanded');
-        document.querySelectorAll('.opportunity.expanded').forEach(o => o.classList.remove('expanded'));
-        if (!wasExpanded) el.classList.add('expanded');
+    el.querySelector('.tool-header').addEventListener('click', () => {
+        const wasOpen = el.classList.contains('open');
+        document.querySelectorAll('.tool.open').forEach(x => x.classList.remove('open'));
+        if (!wasOpen) el.classList.add('open');
     });
 
     container.appendChild(el);
