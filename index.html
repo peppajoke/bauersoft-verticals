@@ -355,11 +355,11 @@ const ideas = [
         detail: "30k investors. $260/mo budget. DealCheck exists ($10-20/mo) but is manual calculator. AI-native that does the research FOR you is the gap. Bigger Pockets is the distribution channel. High willingness to pay."
     },
     {
-        status: "exploring",
+        status: "promising",
         name: "ShowMaxxer (Concert Prep)",
         type: "b2c",
         subtitle: "Artist + venue → predicted setlist, study guide, venue tips, playlist",
-        detail: "SEO goldmine (every upcoming show = a page). Low build cost (4 days). $3/report or $9/mo. Viral potential via social sharing. Question: is the willingness to pay there, or is this a free-tier-forever product?"
+        detail: "SEO goldmine (every upcoming show = a page). Low build cost (4 days). $3/report or $9/mo. Viral potential via social sharing. BOOSTED: Jack has deep domain expertise in live music/festivals. He IS the user. Can validate without research."
     },
     {
         status: "exploring",
@@ -492,6 +492,16 @@ const dataSources = [
 ];
 
 const thoughts = [
+    {
+        date: "May 31, 2026",
+        text: "Areas of deep knowledge: software dev, online games, live music, music festivals, travel, tattoos, AI. Doesn't mean we target these but it's a factor.",
+        take: "Domain expertise = faster validation, better prompts, know where buyers hang out, can judge output quality. This bumps the concert/festival cluster (ShowMaxxer, ConcertCut, TicketSense) and travel (TripDraft) in priority. Also opens a new thread: tattoo shops (20k US) aren't on our list yet but have real pain (booking, deposits, portfolios, consent forms). Worth exploring."
+    },
+    {
+        date: "May 31, 2026",
+        text: "One website/domain, lots of little sub-apps. Specific implementations of the dashboard/chat pattern. Monorepo, single domain with subsites. Use bauersoft subdomains for now.",
+        take: "Right call. Shared shell (auth, billing, chat, dashboard) built once. Each new tool is just config + prompts + widgets. Cross-sell built in. One deploy pipeline. bid.bauersoft.io, show.bauersoft.io, etc."
+    },
     {
         date: "May 31, 2026",
         text: "We need massive amounts of data on what people are spending their time on. Not general areas, specific use cases.",
