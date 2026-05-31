@@ -216,6 +216,7 @@
             <div class="nav-links">
                 <a href="b2b.html">B2B Candidates (14)</a>
                 <a href="b2c.html">B2C Candidates (14)</a>
+                <a href="#questions" style="border-color:var(--amber);color:var(--amber);">Questions for Jack</a>
             </div>
         </header>
 
@@ -260,6 +261,15 @@
                 <span class="section-count">Jack's ideas as they come in</span>
             </div>
             <div id="thoughts"></div>
+        </div>
+
+        <div class="section" id="questions">
+            <div class="section-header">
+                <span class="section-icon">❓</span>
+                <h2>Questions for Jack</h2>
+                <span class="section-count" id="q-count"></span>
+            </div>
+            <div class="idea-list" id="questions-list"></div>
         </div>
 
         <div class="section" id="dead-section">
@@ -309,6 +319,11 @@ const frameworks = [
         status: "exploring",
         title: "Cold Start Dashboard",
         desc: "Day 1 dashboard should be action-oriented ('do the thing'), not informational. Earns the right to be smart only after usage."
+    },
+    {
+        status: "decided",
+        title: "Monorepo + Single Domain",
+        desc: "One codebase, one domain (bauersoft.io subdomains for now). Each tool is a sub-app sharing auth, billing, chat engine, and dashboard shell. New tool = new config, not new app."
     },
     {
         status: "exploring",
@@ -415,6 +430,39 @@ const ideas = [
         type: "b2b",
         subtitle: "Bank connection → auto-categorization → monthly P&L",
         detail: "35k ex-Bench customers + 5M total market. Time-sensitive window (closing). But: financial data trust, Plaid costs, accuracy requirements, SOC2 eventually. Higher complexity than the micro-tool model."
+    }
+];
+
+const questions = [
+    {
+        question: "Which tools do you want to build first?",
+        context: "3 are marked 'promising' (BidMaxxer, ClaimMaxxer, DealMaxxer). Do any of these feel right to start, or does something from the exploring list pull you more? I'd suggest building the shared shell first, then the simplest tool as proof of concept.",
+        priority: "high",
+        status: "open"
+    },
+    {
+        question: "Subdomains: bid.bauersoft.io or bauersoft.io/bid?",
+        context: "You said bauersoft subdomains for now. Subdomains (bid.bauersoft.io) are separate sites in Google's eyes. Sub-paths (bauersoft.io/bid) share domain authority. Subdomains are easier to isolate/kill. Sub-paths are better for SEO compounding. Which matters more right now?",
+        priority: "medium",
+        status: "open"
+    },
+    {
+        question: "Should I build the Upwork/Fiverr scraper?",
+        context: "Highest-signal data source for finding specific use cases. Would take 1-2 days to build. Shows exact tasks people outsource, how much they pay, and how often. Could validate or invalidate several of our candidates with real behavioral data.",
+        priority: "medium",
+        status: "open"
+    },
+    {
+        question: "Budget for validation ads?",
+        context: "The 'try many, kill fast' model assumes running small ad tests ($200-500 per tool) to see if people click/sign up. Is there a total budget you want to cap this at across all experiments? Or are we validating with organic/SEO first?",
+        priority: "low",
+        status: "open"
+    },
+    {
+        question: "Tech stack for the shared shell?",
+        context: "Your stack is JS/TS/Postgres. For the monorepo shared shell (auth, billing, chat, dashboard), are you thinking Next.js? Remix? Plain Vite + API? Simon would build this. Want me to spec it out or do you have a preference?",
+        priority: "low",
+        status: "open"
     }
 ];
 
@@ -537,6 +585,34 @@ thoughts.forEach(t => {
             <div class="thought-take">Clea: ${t.take}</div>
         </div>
     `;
+});
+
+// Questions
+const questionsList = document.getElementById('questions-list');
+document.getElementById('q-count').textContent = `${questions.filter(q=>q.status==='open').length} need input`;
+questions.forEach(q => {
+    const prioColor = q.priority === 'high' ? 'var(--amber)' : q.priority === 'medium' ? 'var(--text-muted)' : 'var(--text-muted)';
+    const row = document.createElement('div');
+    row.className = 'idea-row';
+    row.innerHTML = `
+        <span class="idea-status" style="background:${q.status === 'open' ? 'var(--amber)' : 'var(--green)'}"></span>
+        <div class="idea-main">
+            <div class="idea-name">${q.question}</div>
+            <div class="idea-subtitle">${q.context}</div>
+        </div>
+        <div class="idea-meta">
+            <span class="idea-tag" style="color:${prioColor};border:1px solid ${prioColor};">${q.priority}</span>
+        </div>
+        <div class="idea-detail">
+            <p>${q.context}</p>
+        </div>
+    `;
+    row.addEventListener('click', () => {
+        const wasExpanded = row.classList.contains('expanded');
+        document.querySelectorAll('#questions-list .idea-row.expanded').forEach(r => r.classList.remove('expanded'));
+        if (!wasExpanded) row.classList.add('expanded');
+    });
+    questionsList.appendChild(row);
 });
 
 // Dead ends
