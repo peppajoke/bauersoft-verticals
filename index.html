@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BauerSoft - Vertical Opportunity Analysis</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface-hover: #232736;
+            --border: #2d3148;
+            --text: #e4e4e7;
+            --text-muted: #9ca3af;
+            --accent: #6366f1;
+            --accent-dim: #4f46e5;
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --blue: #3b82f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+        header { text-align: center; margin-bottom: 3rem; }
+        header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .subtitle { color: var(--accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+        .grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover { background: var(--surface-hover); border-color: var(--accent); transform: translateY(-2px); }
+        .card.expanded { grid-column: 1 / -1; }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+        .card-rank {
+            background: var(--accent);
+            color: white;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700;
+            flex-shrink: 0;
+        }
+        .card-title { font-size: 1.25rem; font-weight: 600; flex: 1; margin-left: 0.75rem; }
+        .card-category {
+            font-size: 0.75rem;
+            background: var(--border);
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            color: var(--text-muted);
+        }
+
+        .card-hook { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem; font-style: italic; }
+
+        .metrics { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+        .metric {
+            background: var(--bg);
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+        .metric-label { color: var(--text-muted); }
+        .metric-value { font-weight: 600; color: var(--green); }
+
+        .scores { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .score-bar {
+            display: flex; align-items: center; gap: 0.3rem;
+            font-size: 0.75rem; color: var(--text-muted);
+        }
+        .score-dots { display: flex; gap: 2px; }
+        .dot {
+            width: 8px; height: 8px; border-radius: 2px;
+            background: var(--border);
+        }
+        .dot.filled { background: var(--accent); }
+        .dot.filled.high { background: var(--green); }
+        .dot.filled.mid { background: var(--amber); }
+
+        .detail { display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+        .card.expanded .detail { display: block; }
+
+        .detail h4 { color: var(--accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .detail p { color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem; }
+        .detail ul { list-style: none; padding: 0; }
+        .detail li { padding: 0.3rem 0; padding-left: 1.2rem; position: relative; color: var(--text-muted); font-size: 0.9rem; }
+        .detail li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+
+        .verdict {
+            background: var(--bg);
+            border-left: 3px solid var(--accent);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .legend {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        .legend h3 { margin-bottom: 0.75rem; font-size: 1rem; }
+        .legend p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+
+        .expand-hint {
+            color: var(--accent);
+            font-size: 0.75rem;
+            position: absolute;
+            bottom: 0.75rem;
+            right: 1rem;
+        }
+
+        .filter-bar {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin-bottom: 2rem; justify-content: center;
+        }
+        .filter-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.15s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="subtitle">BauerSoft Market Research</div>
+            <h1>10 Alternative Verticals</h1>
+            <p>Opportunity areas outside trades/home services. Scored from 318 US business types across 40 dimensions. Click any card for the deep dive.</p>
+        </header>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="Healthcare">Healthcare</button>
+            <button class="filter-btn" data-filter="Automotive">Automotive</button>
+            <button class="filter-btn" data-filter="Transportation">Transportation</button>
+            <button class="filter-btn" data-filter="Agriculture">Agriculture</button>
+            <button class="filter-btn" data-filter="Food">Food & Bev</button>
+            <button class="filter-btn" data-filter="Education">Education</button>
+            <button class="filter-btn" data-filter="Professional">Prof. Services</button>
+        </div>
+
+        <div class="grid" id="cards"></div>
+
+        <div class="legend">
+            <h3>Methodology</h3>
+            <p>Dataset: 318 US small business types scored 1-5 across 40 dimensions including TAM, AI advantage, manual process pain, digital maturity gap, software market fragmentation, willingness to pay, defensibility, and niche potential.</p>
+            <p>These 10 were selected by composite score (weighted toward AI advantage, pain, gap, and defensibility) excluding trades/construction and home services (already analyzed separately). Diversity of category was also weighted to avoid healthcare domination.</p>
+            <p>Source data: BauerSoft market research, May 2026. All figures are estimates for the US market.</p>
+        </div>
+    </div>
+
+    <script>
+const verticals = [
+    {
+        rank: 1,
+        title: "Small Fleet Trucking",
+        category: "Transportation & Logistics",
+        filterTag: "Transportation",
+        hook: "500,000 companies, $500/mo budget, drowning in DOT compliance paperwork.",
+        metrics: { "US Companies": "500,000", "Avg Budget": "$500/mo", "Avg Revenue": "$100k/mo", "AI Score": "4/5" },
+        scores: { "TAM": 4, "AI Advantage": 4, "Pain": 4, "Digital Gap": 4, "Fragmentation": 3, "WTP": 4 },
+        why: "The biggest market on this list by raw count. Owner-operators and 1-20 truck fleets are stuck between consumer apps and enterprise TMS systems costing $2k+/mo. DOT compliance (HOS, DVIR, drug testing records) is a regulatory nightmare tracked on clipboards. AI route optimization alone can save 15-20% on fuel.",
+        signals: [
+            "ELD mandate created tech adoption but most stopped there",
+            "Driver shortage means every efficiency gain = survival",
+            "Fuel is 30-40% of operating cost, AI routing directly hits bottom line",
+            "Compliance violations average $16k per incident",
+            "Fragmented: no dominant player for <20 truck fleets"
+        ],
+        risks: "Highly regulated space, integration with existing ELD hardware required. Long sales cycle possible.",
+        verdict: "Massive TAM with genuine AI unlock. The compliance + routing combo is a wedge no spreadsheet can replicate. Needs deeper research on ELD integration landscape and actual switching friction."
+    },
+    {
+        rank: 2,
+        title: "Independent Auto Repair",
+        category: "Automotive",
+        filterTag: "Automotive",
+        hook: "160,000 shops still diagnosing from memory. AI diagnostic data is the moat nobody's built.",
+        metrics: { "US Shops": "160,000", "Avg Budget": "$250/mo", "Avg Revenue": "$50k/mo", "AI Score": "4/5" },
+        scores: { "TAM": 3, "AI Advantage": 4, "Pain": 5, "Digital Gap": 5, "Fragmentation": 4, "WTP": 3 },
+        why: "Maximum pain score. Most independent shops use paper tickets or ancient DOS-era software. The diagnostic data opportunity is enormous: every repair teaches the system what symptoms mean for what cars. After 10,000 repairs, you have a diagnostic brain no competitor can replicate overnight. Parts inventory prediction, labor time estimation, customer vehicle lifecycle tracking.",
+        signals: [
+            "Average shop loses 2-3 hours/day on parts lookup and ordering",
+            "Technician shortage is acute; AI assistance multiplies each tech",
+            "OBD-II data + repair history = predictive maintenance goldmine",
+            "Shop management software leaders (Mitchell, ShopWare) are legacy/clunky",
+            "Right to Repair movement opening up OEM data access"
+        ],
+        risks: "Lower WTP than other verticals ($250/mo). Need to prove ROI fast. Integration with parts suppliers (WorldPac, AutoZone Pro) is table stakes.",
+        verdict: "The data moat here is real. Every repair logged makes the diagnostic AI smarter. 160k shops is a huge market even at $250/mo. Key question: can you get adoption at the tech level (the person using it) while selling to the owner?"
+    },
+    {
+        rank: 3,
+        title: "Senior Home Care / Home Health",
+        category: "Healthcare",
+        filterTag: "Healthcare",
+        hook: "Aging population + caregiver shortage + compliance hell. $600/mo budgets and growing 7% annually.",
+        metrics: { "US Agencies": "55,000+", "Avg Budget": "$500-600/mo", "Avg Revenue": "$50-100k/mo", "AI Score": "5/5" },
+        scores: { "TAM": 3, "AI Advantage": 5, "Pain": 5, "Digital Gap": 5, "Fragmentation": 2, "WTP": 5 },
+        why: "Combining home health agencies (30k) and senior home care (25k) because the pain is identical: caregiver scheduling across dozens of patients, compliance documentation, billing Medicare/Medicaid, family communication portals. The AI advantage is maximum: matching caregivers to patients based on skills/personality/geography, predicting no-shows, auto-generating compliance docs, detecting care quality issues from visit notes.",
+        signals: [
+            "10,000 Americans turn 65 every day through 2030",
+            "Caregiver turnover is 60-80% annually; AI scheduling reduces burnout",
+            "CMS compliance requirements getting stricter every year",
+            "Families willing to pay premium for transparency/communication",
+            "Most agencies still use paper timesheets and phone-based scheduling"
+        ],
+        risks: "Healthcare compliance (HIPAA, state licensing) raises the bar significantly. Some consolidation happening (BrightSpring, Amedisys). Existing players like AlayaCare, ClearCare exist but are enterprise-priced.",
+        verdict: "Demographic tailwind is undeniable. High WTP, extreme pain, and the compliance lock-in creates a moat. The question is whether you can navigate healthcare regulations without a dedicated compliance team. Worth deep research on the mid-market gap."
+    },
+    {
+        rank: 4,
+        title: "Small-Scale Agriculture",
+        category: "Agriculture",
+        filterTag: "Agriculture",
+        hook: "200,000 farms with 5/5 pain and 5/5 digital gap. AI weather + crop planning is transformative.",
+        metrics: { "US Farms": "200,000", "Avg Budget": "$200/mo", "Avg Revenue": "$50k/mo", "AI Score": "5/5" },
+        scores: { "TAM": 3, "AI Advantage": 5, "Pain": 5, "Digital Gap": 5, "Fragmentation": 3, "WTP": 3 },
+        why: "Small and mid-size farms (not industrial ag) are the most digitally underserved businesses in America. Maximum digital gap score. They're making million-dollar planting decisions based on gut feel and the Farmer's Almanac. AI crop planning with hyperlocal weather, soil data integration, equipment maintenance prediction, and compliance tracking (organic certs, pesticide logs) is a genuine step-change.",
+        signals: [
+            "Average farmer is 58 years old; succession planning creating tech openness",
+            "Climate volatility making traditional knowledge less reliable",
+            "USDA increasingly requiring digital record-keeping",
+            "Precision ag hardware (sensors, drones) generating data nobody analyzes",
+            "Farm management software (Granular, FarmLogs) got acquired/neglected"
+        ],
+        risks: "Low WTP ($200/mo) relative to complexity of building. Seasonal cash flow means annual billing may be required. Rural connectivity issues. Highly diverse operations (row crop vs livestock vs specialty).",
+        verdict: "Fascinating market: massive, underserved, with genuine AI transformation potential. The low WTP is the concern, but 200k farms at even $150/mo is $360M TAM. Specialty farms (organic, direct-to-consumer) may be a higher-WTP wedge. Needs research on which farm subtypes have the most pain AND money."
+    },
+    {
+        rank: 5,
+        title: "Used Auto Dealerships",
+        category: "Automotive",
+        filterTag: "Automotive",
+        hook: "AI pricing is the killer app. Every car is unique; the dealer who prices best wins.",
+        metrics: { "US Dealers": "40,000", "Avg Budget": "$500/mo", "Avg Revenue": "$200k/mo", "AI Score": "5/5" },
+        scores: { "TAM": 3, "AI Advantage": 5, "Pain": 4, "Digital Gap": 5, "Fragmentation": 4, "WTP": 4 },
+        why: "Used car pricing is the perfect AI problem: every vehicle is unique (mileage, condition, local demand, seasonality, color preferences). Most independent dealers still price by gut or overpay at auction. AI inventory pricing, acquisition recommendations (which cars to buy at auction), lead scoring, and days-on-lot prediction would be genuinely transformative. High revenue businesses ($200k/mo) with $500/mo budgets.",
+        signals: [
+            "Carvana/Vroom proved AI pricing works but serve consumers, not dealers",
+            "Independent dealers are 60%+ of used car market",
+            "Inventory turn rate is the #1 profitability driver",
+            "Most use vAuto (Cox) which is expensive and dealer-hostile",
+            "Auction data + local demand = proprietary pricing intelligence"
+        ],
+        risks: "vAuto/Cox Automotive is entrenched and has data advantages. Market is cyclical. Dealers can be skeptical of tech. Integration with auction platforms (Manheim, ACV) would be needed.",
+        verdict: "The AI advantage score is maximum because pricing IS the business. If you can demonstrate even 5% better inventory turn, the ROI story writes itself at $200k/mo revenue. Research needed: how locked-in are dealers to Cox/vAuto, and can you get auction data access?"
+    },
+    {
+        rank: 6,
+        title: "Childcare / Daycare Centers",
+        category: "Education & Childcare",
+        filterTag: "Education",
+        hook: "60,000 centers. Parents demand tech. Staff ratios are legally mandated. Compliance is constant.",
+        metrics: { "US Centers": "60,000", "Avg Budget": "$250/mo", "Avg Revenue": "$40k/mo", "AI Score": "4/5" },
+        scores: { "TAM": 2, "AI Advantage": 4, "Pain": 5, "Digital Gap": 5, "Fragmentation": 3, "WTP": 4 },
+        why: "Legally mandated staff-to-child ratios mean scheduling isn't optional, it's compliance. Parent communication expectations are sky-high (photos, daily reports, milestone tracking). Billing is complex (variable schedules, subsidies, sibling discounts, deposits). The existing tools (Brightwheel, HiMama) proved the market but left gaps in the owner-operator experience. AI can optimize staff scheduling around ratio requirements, predict attendance, and auto-generate developmental progress reports.",
+        signals: [
+            "Post-COVID childcare shortage = remaining centers have pricing power",
+            "State licensing requirements getting more complex annually",
+            "Millennial/Gen-Z parents expect app-based communication as default",
+            "Staff turnover is 30-40%; scheduling optimization reduces burnout",
+            "Subsidy billing (state vouchers) is a massive administrative pain point"
+        ],
+        risks: "Brightwheel raised $100M+ and is the clear market leader. Differentiation would need to be significant. Centers are price-sensitive despite the budget figure.",
+        verdict: "The compliance angle (mandatory ratios, licensing docs, subsidy billing) is underserved even by Brightwheel. A compliance-first product that also does parent communication could carve a niche. Research: what are Brightwheel's actual gaps according to center owners?"
+    },
+    {
+        rank: 7,
+        title: "Independent Restaurants",
+        category: "Food & Beverage",
+        filterTag: "Food",
+        hook: "350,000 restaurants. Maximum pain. AI food cost + labor optimization saves businesses that run on 5% margins.",
+        metrics: { "US Restaurants": "350,000", "Avg Budget": "$300/mo", "Avg Revenue": "$80k/mo", "AI Score": "4/5" },
+        scores: { "TAM": 4, "AI Advantage": 4, "Pain": 5, "Digital Gap": 5, "Fragmentation": 2, "WTP": 3 },
+        why: "Restaurants have the highest TAM score on this list (350k businesses) and maximum pain. They operate on 3-7% margins where a 2% food cost improvement means the difference between profit and loss. AI menu engineering (which items to promote based on margin + popularity), demand forecasting for prep and labor, and waste tracking are genuinely novel. Most independent restaurants use no back-of-house analytics whatsoever.",
+        signals: [
+            "Toast/Square captured POS but ignored back-of-house intelligence",
+            "Food costs spiked 20%+ since 2022; margin pressure is existential",
+            "Labor scheduling is the #1 cited pain point by restaurant owners",
+            "Ghost kitchens and delivery created new complexity nobody tools for",
+            "Menu engineering is a proven concept that nobody automates for independents"
+        ],
+        risks: "Extremely fragmented with low WTP and high churn. Restaurant failure rate means constant customer loss. Toast/Square could expand into this space. Owner attention span for software is minimal.",
+        verdict: "Biggest market but hardest to serve. The angle would be: don't sell software, sell 'your food costs will drop 3% this month' as a service. Outcome-based pricing could work. Research: is there a niche within restaurants (pizza shops? fast casual?) where pain is concentrated and homogeneous enough to productize?"
+    },
+    {
+        rank: 8,
+        title: "Property Management",
+        category: "Professional Services",
+        filterTag: "Professional",
+        hook: "30,000 firms managing millions of units. AI maintenance triage + tenant matching. $400/mo budgets.",
+        metrics: { "US Firms": "30,000", "Avg Budget": "$400/mo", "Avg Revenue": "$60k/mo", "AI Score": "5/5" },
+        scores: { "TAM": 2, "AI Advantage": 5, "Pain": 5, "Digital Gap": 4, "Fragmentation": 3, "WTP": 4 },
+        why: "Property managers deal with a perfect storm: tenant communication (texts, emails, portals), maintenance request triage and dispatch, rent collection and late fee management, lease compliance, vendor coordination, and owner reporting. AI can triage maintenance requests (emergency vs. routine), match tenants to properties, predict turnover, optimize rent pricing, and auto-generate owner reports. The data compounds: every property's maintenance history makes predictions better.",
+        signals: [
+            "Buildium, AppFolio, Rent Manager dominate but are aging platforms",
+            "AI maintenance triage alone could save 10+ hours/week per manager",
+            "Tenant screening is being disrupted by alternative data scoring",
+            "Single-family rental explosion (institutional + individual investors) creating new PM firms",
+            "Owner reporting is still manual spreadsheet work at most firms"
+        ],
+        risks: "AppFolio and Buildium have strong market positions. Integration with accounting, screening services, and payment processors is table stakes. Regulatory complexity varies wildly by state/municipality.",
+        verdict: "The AI advantage is real here: maintenance triage, tenant matching, and predictive analytics are genuine differentiators that legacy platforms haven't built. The question is whether you can unseat AppFolio or need to find an underserved niche (e.g., short-term rental managers, HOA management)."
+    },
+    {
+        rank: 9,
+        title: "Staffing & Temp Agencies",
+        category: "Professional Services",
+        filterTag: "Professional",
+        hook: "25,000 agencies. AI candidate matching is the entire value proposition. $500/mo budgets.",
+        metrics: { "US Agencies": "25,000", "Avg Budget": "$500/mo", "Avg Revenue": "$100k/mo", "AI Score": "5/5" },
+        scores: { "TAM": 2, "AI Advantage": 5, "Pain": 4, "Digital Gap": 4, "Fragmentation": 3, "WTP": 5 },
+        why: "Staffing agencies live and die by how fast they can match candidates to openings. This is a pure AI problem: skill matching, availability prediction, reliability scoring, geographic optimization. Most small agencies (5-20 person shops) still use spreadsheets or basic ATS systems designed for direct-hire recruiting, not the speed and volume of temp/contract placement. Payroll complexity (multiple work sites, variable hours, different rates) adds pain.",
+        signals: [
+            "Gig economy blurring lines between staffing and platforms",
+            "AI matching that learns from placement success/failure is a genuine moat",
+            "Compliance (worker classification, I-9, state-specific labor law) is increasingly complex",
+            "Large staffing firms (Robert Half, Kelly) have tech; independents don't",
+            "Healthcare and industrial staffing niches have extreme urgency"
+        ],
+        risks: "Indeed, LinkedIn, and large staffing platforms have data advantages. Some niches are very competitive (IT staffing). The market may consolidate further.",
+        verdict: "High WTP and maximum AI advantage make this attractive. The play would be niche-specific: healthcare staffing, warehouse/logistics staffing, or trades staffing where the matching criteria are specialized. Research needed on which staffing niche has the most independent operators and worst current tooling."
+    },
+    {
+        rank: 10,
+        title: "Mental Health / Behavioral Health",
+        category: "Healthcare",
+        filterTag: "Healthcare",
+        hook: "50,000+ practices. HIPAA-compliant everything. Insurance billing is a nightmare. AI note generation saves hours daily.",
+        metrics: { "US Practices": "50,000+", "Avg Budget": "$300/mo", "Avg Revenue": "$25k/mo", "AI Score": "5/5" },
+        scores: { "TAM": 2, "AI Advantage": 5, "Pain": 4, "Digital Gap": 4, "Fragmentation": 3, "WTP": 4 },
+        why: "Mental health practitioners spend 30-40% of their time on documentation, not patients. AI-assisted session notes (compliant, structured for insurance) is the killer feature that's just now becoming possible. Add: insurance verification, claim submission, appointment scheduling with no-show prediction, outcome tracking, and group practice management. The therapist shortage means anything that frees up clinical time has enormous value.",
+        signals: [
+            "Telehealth normalized; platform-native tools needed",
+            "AI note generation (from session recordings) is a new capability that didn't exist 2 years ago",
+            "Insurance billing rejection rates are 20%+; AI can fix claim formatting",
+            "SimplePractice/TherapyNotes are market leaders but reviews show major gaps",
+            "Demand for therapy exceeds supply by 2-3x; efficiency = more patients served"
+        ],
+        risks: "HIPAA compliance is non-negotiable and expensive to maintain. SimplePractice has strong brand loyalty. AI-generated clinical notes raise ethical/liability questions. Lower revenue per practice ($25k/mo) limits WTP.",
+        verdict: "The AI note generation angle is genuinely disruptive and timely. If you can crack compliant, accurate session documentation, therapists will pay because it gives them back 10+ hours per week. The ethical/regulatory questions need deep research, but several startups (Upheal, Blueprint) are proving the category. Question: is there room for a simpler, cheaper alternative?"
+    }
+];
+
+const grid = document.getElementById('cards');
+
+function renderCards(filter) {
+    grid.innerHTML = '';
+    const filtered = filter === 'all' ? verticals : verticals.filter(v => v.filterTag === filter);
+    
+    filtered.forEach(v => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.rank = v.rank;
+        
+        const scoresHtml = Object.entries(v.scores).map(([label, val]) => {
+            const dots = Array.from({length: 5}, (_, i) => {
+                const filled = i < val;
+                const cls = filled ? (val >= 4 ? 'filled high' : val >= 3 ? 'filled mid' : 'filled') : '';
+                return `<div class="dot ${cls}"></div>`;
+            }).join('');
+            return `<div class="score-bar"><span>${label}</span><div class="score-dots">${dots}</div></div>`;
+        }).join('');
+
+        const metricsHtml = Object.entries(v.metrics).map(([k, val]) => 
+            `<div class="metric"><span class="metric-label">${k}: </span><span class="metric-value">${val}</span></div>`
+        ).join('');
+
+        const signalsHtml = v.signals.map(s => `<li>${s}</li>`).join('');
+
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="card-rank">${v.rank}</div>
+                <div class="card-title">${v.title}</div>
+                <span class="card-category">${v.category}</span>
+            </div>
+            <div class="card-hook">${v.hook}</div>
+            <div class="metrics">${metricsHtml}</div>
+            <div class="scores">${scoresHtml}</div>
+            <span class="expand-hint">click to expand</span>
+            <div class="detail">
+                <h4>Why This Vertical</h4>
+                <p>${v.why}</p>
+                <h4>Market Signals</h4>
+                <ul>${signalsHtml}</ul>
+                <h4>Key Risks</h4>
+                <p>${v.risks}</p>
+                <div class="verdict"><strong>Verdict:</strong> ${v.verdict}</div>
+            </div>
+        `;
+
+        card.addEventListener('click', () => {
+            const wasExpanded = card.classList.contains('expanded');
+            document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove('expanded'));
+            if (!wasExpanded) card.classList.add('expanded');
+        });
+
+        grid.appendChild(card);
+    });
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderCards(btn.dataset.filter);
+    });
+});
+
+renderCards('all');
+    </script>
+</body>
+</html>
